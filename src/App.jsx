@@ -11,6 +11,7 @@ const categories = [
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
+  const [selectedPro, setSelectedPro] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [professionals, setProfessionals] = useState([]);
   const [searchProfession, setSearchProfession] = useState("");
@@ -19,13 +20,19 @@ function App() {
 
   const [formData, setFormData] = useState({
     name: "",
+    company_name: "",
     profession: "",
     city: "",
     phone: "",
     email: "",
     whatsapp: "",
     category: "",
+    years_experience: "",
+    website: "",
+    facebook: "",
+    instagram: "",
     profile_image: "",
+    cover_image: "",
     description: "",
   });
 
@@ -64,7 +71,7 @@ function App() {
   const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
 
-  const uploadProfileImage = async (event) => {
+  const uploadImage = async (event, fieldName) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -89,7 +96,7 @@ function App() {
 
     setFormData((prev) => ({
       ...prev,
-      profile_image: data.publicUrl,
+      [fieldName]: data.publicUrl,
     }));
 
     setUploading(false);
@@ -117,18 +124,127 @@ function App() {
 
     setFormData({
       name: "",
+      company_name: "",
       profession: "",
       city: "",
       phone: "",
       email: "",
       whatsapp: "",
       category: "",
+      years_experience: "",
+      website: "",
+      facebook: "",
+      instagram: "",
       profile_image: "",
+      cover_image: "",
       description: "",
     });
 
     fetchProfessionals();
   };
+
+  if (selectedPro) {
+    return (
+      <div className="page">
+        <button className="ghost-btn" onClick={() => setSelectedPro(null)}>
+          ← Kthehu te lista
+        </button>
+
+        <section className="profile-page">
+          <div className="profile-cover">
+            {selectedPro.cover_image ? (
+              <img src={selectedPro.cover_image} alt={selectedPro.name} />
+            ) : (
+              <div className="cover-fallback">Fix24 Professional</div>
+            )}
+          </div>
+
+          <div className="profile-main">
+            <div className="profile-photo">
+              {selectedPro.profile_image ? (
+                <img src={selectedPro.profile_image} alt={selectedPro.name} />
+              ) : (
+                <span>{selectedPro.name?.charAt(0)?.toUpperCase()}</span>
+              )}
+            </div>
+
+            <div className="profile-info">
+              <span className="eyebrow">
+                {selectedPro.verified ? "✓ I verifikuar" : "Profesionist Fix24"}
+              </span>
+
+              <h1>{selectedPro.name}</h1>
+
+              {selectedPro.company_name && <h3>{selectedPro.company_name}</h3>}
+
+              <p>
+                {selectedPro.profession} në {selectedPro.city}
+              </p>
+
+              <div className="profile-tags">
+                {selectedPro.category && <span>{selectedPro.category}</span>}
+                {selectedPro.years_experience && (
+                  <span>{selectedPro.years_experience} vite eksperiencë</span>
+                )}
+                <span>⭐ {selectedPro.reviews > 0 ? `${selectedPro.rating || 5}.0` : "I ri në Fix24"}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="profile-layout">
+            <div className="profile-about">
+              <h2>Rreth profesionistit</h2>
+              <p>
+                {selectedPro.description ||
+                  "Ky profesionist është regjistruar në Fix24 dhe mund të kontaktohet direkt për shërbime."}
+              </p>
+
+              <h2>Kontakt</h2>
+              <p>📍 {selectedPro.city}</p>
+              <p>📞 {selectedPro.phone}</p>
+              {selectedPro.email && <p>✉️ {selectedPro.email}</p>}
+
+              <div className="social-links">
+                {selectedPro.website && (
+                  <a href={selectedPro.website} target="_blank" rel="noreferrer">
+                    Website
+                  </a>
+                )}
+                {selectedPro.facebook && (
+                  <a href={selectedPro.facebook} target="_blank" rel="noreferrer">
+                    Facebook
+                  </a>
+                )}
+                {selectedPro.instagram && (
+                  <a href={selectedPro.instagram} target="_blank" rel="noreferrer">
+                    Instagram
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="profile-contact-card">
+              <h3>Kontakto direkt</h3>
+              <p>Zgjidh mënyrën më të shpejtë për të folur me profesionistin.</p>
+
+              <a href={`tel:${selectedPro.phone}`} className="call-btn">
+                Telefono
+              </a>
+
+              <a
+                href={`https://wa.me/${getWhatsAppNumber(selectedPro)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="whatsapp-btn"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (showRegister) {
     return (
@@ -159,7 +275,30 @@ function App() {
 
               <label className="upload-label">
                 {uploading ? "Duke ngarkuar..." : "Ngarko foto / logo"}
-                <input type="file" accept="image/*" onChange={uploadProfileImage} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => uploadImage(e, "profile_image")}
+                />
+              </label>
+            </div>
+
+            <div className="upload-box">
+              <div className="upload-preview cover-small">
+                {formData.cover_image ? (
+                  <img src={formData.cover_image} alt="Cover preview" />
+                ) : (
+                  <span>Cover</span>
+                )}
+              </div>
+
+              <label className="upload-label">
+                {uploading ? "Duke ngarkuar..." : "Ngarko cover image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => uploadImage(e, "cover_image")}
+                />
               </label>
             </div>
 
@@ -168,6 +307,12 @@ function App() {
                 placeholder="Emri dhe mbiemri"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+
+              <input
+                placeholder="Emri i kompanisë"
+                value={formData.company_name}
+                onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
               />
 
               <input
@@ -198,6 +343,32 @@ function App() {
                 placeholder="WhatsApp"
                 value={formData.whatsapp}
                 onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+              />
+
+              <input
+                placeholder="Vite eksperiencë p.sh. 8"
+                value={formData.years_experience}
+                onChange={(e) =>
+                  setFormData({ ...formData, years_experience: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Website"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              />
+
+              <input
+                placeholder="Facebook"
+                value={formData.facebook}
+                onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
+              />
+
+              <input
+                placeholder="Instagram"
+                value={formData.instagram}
+                onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
               />
 
               <select
@@ -447,9 +618,18 @@ function App() {
                   {pro.category && <b>{pro.category}</b>}
                 </div>
 
+                {pro.company_name && <div className="company-line">🏢 {pro.company_name}</div>}
+                {pro.years_experience && (
+                  <div className="company-line">🧰 {pro.years_experience} vite eksperiencë</div>
+                )}
+
                 {pro.description && <p className="pro-desc">{pro.description}</p>}
 
                 <div className="phone-line">📞 {pro.phone}</div>
+
+                <button className="profile-btn" onClick={() => setSelectedPro(pro)}>
+                  Shiko profilin
+                </button>
 
                 <div className="pro-actions">
                   <a href={`tel:${pro.phone}`} className="call-btn">
