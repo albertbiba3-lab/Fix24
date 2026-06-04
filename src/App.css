@@ -844,4 +844,10 @@ textarea {
 
 .clickable-card:active {
   transform: scale(0.99);
+}.clickable-card {
+  cursor: pointer;
+}
+
+.clickable-card:active {
+  transform: scale(0.99);
 }
