@@ -35,11 +35,34 @@ function App() {
         <div className="profile-card">
           <h1>Regjistrohu si profesionist</h1>
 
-          <input placeholder="Emri dhe mbiemri" onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-          <input placeholder="Profesioni" onChange={(e) => setFormData({ ...formData, profession: e.target.value })} />
-          <input placeholder="Qyteti" onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
-          <input placeholder="Numri i telefonit" onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-          <textarea placeholder="Përshkruaj shërbimet që ofron" onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+          <input
+            placeholder="Emri dhe mbiemri"
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+
+          <input
+            placeholder="Profesioni"
+            onChange={(e) =>
+              setFormData({ ...formData, profession: e.target.value })
+            }
+          />
+
+          <input
+            placeholder="Qyteti"
+            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+          />
+
+          <input
+            placeholder="Numri i telefonit"
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          />
+
+          <textarea
+            placeholder="Përshkruaj shërbimet që ofron"
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+          />
 
           <button className="register-btn" onClick={saveProfessional}>
             Dërgo regjistrimin
