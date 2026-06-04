@@ -15,6 +15,7 @@ function App() {
   const [professionals, setProfessionals] = useState([]);
   const [searchProfession, setSearchProfession] = useState("");
   const [searchCity, setSearchCity] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +25,7 @@ function App() {
     email: "",
     whatsapp: "",
     category: "",
+    profile_image: "",
     description: "",
   });
 
@@ -57,9 +59,41 @@ function App() {
     });
   }, [professionals, searchProfession, searchCity]);
 
-  const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
+  const featuredProfessional = professionals[0];
 
+  const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
+
+  const uploadProfileImage = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+    const { error } = await supabase.storage
+      .from("profile-images")
+      .upload(fileName, file);
+
+    if (error) {
+      alert(error.message);
+      setUploading(false);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("profile-images")
+      .getPublicUrl(fileName);
+
+    setFormData((prev) => ({
+      ...prev,
+      profile_image: data.publicUrl,
+    }));
+
+    setUploading(false);
+  };
 
   const saveProfessional = async () => {
     if (
@@ -80,6 +114,7 @@ function App() {
     }
 
     setSubmitted(true);
+
     setFormData({
       name: "",
       profession: "",
@@ -88,6 +123,7 @@ function App() {
       email: "",
       whatsapp: "",
       category: "",
+      profile_image: "",
       description: "",
     });
 
@@ -104,21 +140,70 @@ function App() {
 
           <div className="register-card">
             <span className="eyebrow">Fix24 Professional</span>
+
             <h1>Regjistro profilin tënd profesional</h1>
+
             <p>
-              Plotëso të dhënat bazë. Profili yt do të shfaqet në platformë dhe klientët
-              mund të të kontaktojnë direkt.
+              Krijo një profil të pastër dhe profesional. Klientët mund të të
+              gjejnë sipas qytetit, profesionit dhe kategorisë.
             </p>
 
-            <div className="form-grid">
-              <input placeholder="Emri dhe mbiemri" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-              <input placeholder="Profesioni p.sh. Hidraulik" value={formData.profession} onChange={(e) => setFormData({ ...formData, profession: e.target.value })} />
-              <input placeholder="Qyteti p.sh. Frankfurt" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
-              <input placeholder="Telefoni" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-              <input placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-              <input placeholder="WhatsApp" value={formData.whatsapp} onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })} />
+            <div className="upload-box">
+              <div className="upload-preview">
+                {formData.profile_image ? (
+                  <img src={formData.profile_image} alt="Profile preview" />
+                ) : (
+                  <span>{formData.name ? formData.name.charAt(0).toUpperCase() : "F24"}</span>
+                )}
+              </div>
 
-              <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+              <label className="upload-label">
+                {uploading ? "Duke ngarkuar..." : "Ngarko foto / logo"}
+                <input type="file" accept="image/*" onChange={uploadProfileImage} />
+              </label>
+            </div>
+
+            <div className="form-grid">
+              <input
+                placeholder="Emri dhe mbiemri"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+
+              <input
+                placeholder="Profesioni p.sh. Hidraulik"
+                value={formData.profession}
+                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+              />
+
+              <input
+                placeholder="Qyteti p.sh. Frankfurt"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              />
+
+              <input
+                placeholder="Telefoni"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+
+              <input
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+
+              <input
+                placeholder="WhatsApp"
+                value={formData.whatsapp}
+                onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+              />
+
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              >
                 <option value="">Zgjidh kategorinë</option>
                 {categories.map((cat) => (
                   <option key={cat.name} value={cat.name}>
@@ -138,7 +223,9 @@ function App() {
               Dërgo regjistrimin
             </button>
 
-            {submitted && <div className="success">✅ Regjistrimi u dërgua me sukses.</div>}
+            {submitted && (
+              <div className="success">✅ Regjistrimi u dërgua me sukses.</div>
+            )}
           </div>
         </div>
       </div>
@@ -165,10 +252,12 @@ function App() {
         <div className="hero-grid">
           <div className="hero-left">
             <span className="eyebrow">Platformë moderne për shërbime</span>
+
             <h1>Gjej profesionistin e duhur, shpejt dhe me besim.</h1>
+
             <p>
-              Kërko sipas profesionit dhe qytetit. Krahaso profilet, shiko të dhënat dhe
-              kontakto direkt me telefon ose WhatsApp.
+              Kërko sipas profesionit dhe qytetit. Krahaso profilet, shiko të
+              dhënat dhe kontakto direkt me telefon ose WhatsApp.
             </p>
 
             <div className="search-panel">
@@ -188,31 +277,62 @@ function App() {
             </div>
 
             <div className="hero-stats">
-              <div><strong>{professionals.length}+</strong><span>Profesionistë</span></div>
-              <div><strong>24/7</strong><span>Kërkim online</span></div>
-              <div><strong>0€</strong><span>Kontakt direkt</span></div>
+              <div>
+                <strong>{professionals.length}+</strong>
+                <span>Profesionistë</span>
+              </div>
+              <div>
+                <strong>24/7</strong>
+                <span>Kërkim online</span>
+              </div>
+              <div>
+                <strong>Direkt</strong>
+                <span>Telefon & WhatsApp</span>
+              </div>
             </div>
           </div>
 
           <div className="hero-card">
             <div className="mini-card active">
-              <span>Verified</span>
-              <strong>Hidraulik në qytetin tënd</strong>
-              <p>Telefon & WhatsApp direkt</p>
+              <span>Verified style</span>
+              <strong>Profile profesionale</strong>
+              <p>Foto, kategori, qytet dhe kontakt direkt.</p>
             </div>
+
             <div className="mini-card">
               <span>Fast match</span>
               <strong>Kërkim sipas lokacionit</strong>
-              <p>Rezultate të filtrueshme</p>
+              <p>Rezultate të thjeshta për klientët.</p>
             </div>
           </div>
         </div>
       </header>
 
+      <section className="trust-strip">
+        <span>⭐ Profesionistë lokalë</span>
+        <span>📍 Kërkim sipas qytetit</span>
+        <span>📞 Kontakt direkt</span>
+        <span>🛠️ Shërbime të verifikuara më vonë</span>
+      </section>
+
       <section className="steps">
-        <div><span>01</span><strong>Kërko</strong><p>Zgjidh profesionin dhe qytetin.</p></div>
-        <div><span>02</span><strong>Krahaso</strong><p>Shiko profilet dhe përshkrimin.</p></div>
-        <div><span>03</span><strong>Kontakto</strong><p>Telefono ose shkruaj në WhatsApp.</p></div>
+        <div>
+          <span>01</span>
+          <strong>Kërko</strong>
+          <p>Zgjidh profesionin dhe qytetin.</p>
+        </div>
+
+        <div>
+          <span>02</span>
+          <strong>Krahaso</strong>
+          <p>Shiko profilet dhe përshkrimin.</p>
+        </div>
+
+        <div>
+          <span>03</span>
+          <strong>Kontakto</strong>
+          <p>Telefono ose shkruaj në WhatsApp.</p>
+        </div>
       </section>
 
       <section className="section">
@@ -221,12 +341,17 @@ function App() {
             <span className="eyebrow">Kategoritë</span>
             <h2>Shërbimet më të kërkuara</h2>
           </div>
+
           <span>{categories.length} kategori</span>
         </div>
 
         <div className="category-grid">
           {categories.map((cat) => (
-            <button key={cat.name} className="category-card" onClick={() => setSearchProfession(cat.name)}>
+            <button
+              key={cat.name}
+              className="category-card"
+              onClick={() => setSearchProfession(cat.name)}
+            >
               <div>{cat.icon}</div>
               <strong>{cat.name}</strong>
               <p>{cat.text}</p>
@@ -235,12 +360,53 @@ function App() {
         </div>
       </section>
 
+      {featuredProfessional && (
+        <section className="featured-section">
+          <div className="featured-card">
+            <div className="featured-image">
+              {featuredProfessional.profile_image ? (
+                <img src={featuredProfessional.profile_image} alt={featuredProfessional.name} />
+              ) : (
+                <span>{featuredProfessional.name?.charAt(0)?.toUpperCase()}</span>
+              )}
+            </div>
+
+            <div>
+              <span className="eyebrow">Profesionist i regjistruar</span>
+              <h2>{featuredProfessional.name}</h2>
+              <p>
+                {featuredProfessional.profession} në {featuredProfessional.city}
+              </p>
+              <p className="featured-desc">
+                {featuredProfessional.description || "Profil profesional në Fix24."}
+              </p>
+
+              <div className="featured-actions">
+                <a href={`tel:${featuredProfessional.phone}`} className="call-btn">
+                  Telefono
+                </a>
+
+                <a
+                  href={`https://wa.me/${getWhatsAppNumber(featuredProfessional)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="whatsapp-btn"
+                >
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="section">
         <div className="section-heading">
           <div>
             <span className="eyebrow">Marketplace</span>
             <h2>Profesionistët e regjistruar</h2>
           </div>
+
           <span>{filteredProfessionals.length} rezultat/e</span>
         </div>
 
@@ -254,7 +420,14 @@ function App() {
             filteredProfessionals.map((pro) => (
               <article className="pro-card" key={pro.id}>
                 <div className="pro-header">
-                  <div className="avatar">{pro.name?.charAt(0)?.toUpperCase()}</div>
+                  <div className="avatar">
+                    {pro.profile_image ? (
+                      <img src={pro.profile_image} alt={pro.name} />
+                    ) : (
+                      pro.name?.charAt(0)?.toUpperCase()
+                    )}
+                  </div>
+
                   <div>
                     <h3>{pro.name}</h3>
                     <p>{pro.profession}</p>
@@ -263,7 +436,9 @@ function App() {
 
                 <div className="rating-line">
                   <span>⭐</span>
-                  <strong>{pro.reviews > 0 ? `${pro.rating || 5}.0` : "I ri në Fix24"}</strong>
+                  <strong>
+                    {pro.reviews > 0 ? `${pro.rating || 5}.0` : "I ri në Fix24"}
+                  </strong>
                   {pro.reviews > 0 && <small>({pro.reviews} vlerësime)</small>}
                 </div>
 
@@ -277,8 +452,18 @@ function App() {
                 <div className="phone-line">📞 {pro.phone}</div>
 
                 <div className="pro-actions">
-                  <a href={`tel:${pro.phone}`} className="call-btn">Telefono</a>
-                  <a href={`https://wa.me/${getWhatsAppNumber(pro)}`} target="_blank" rel="noreferrer" className="whatsapp-btn">WhatsApp</a>
+                  <a href={`tel:${pro.phone}`} className="call-btn">
+                    Telefono
+                  </a>
+
+                  <a
+                    href={`https://wa.me/${getWhatsAppNumber(pro)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="whatsapp-btn"
+                  >
+                    WhatsApp
+                  </a>
                 </div>
               </article>
             ))
