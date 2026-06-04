@@ -1,6 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { supabase } from "./supabaseClient";
+
+const categories = [
+  { name: "Elektricist", icon: "⚡", text: "Instalime, defekte, ndriçim" },
+  { name: "Hidraulik", icon: "🚰", text: "Ujë, ngrohje, banjo" },
+  { name: "Mekanik", icon: "🔧", text: "Makina, servis, riparime" },
+  { name: "Bojaxhi", icon: "🎨", text: "Lyerje, renovim, mure" },
+];
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -10,15 +17,15 @@ function App() {
   const [searchCity, setSearchCity] = useState("");
 
   const [formData, setFormData] = useState({
-  name: "",
-  profession: "",
-  city: "",
-  phone: "",
-  email: "",
-  whatsapp: "",
-  category: "",
-  description: "",
-});
+    name: "",
+    profession: "",
+    city: "",
+    phone: "",
+    email: "",
+    whatsapp: "",
+    category: "",
+    description: "",
+  });
 
   const fetchProfessionals = async () => {
     const { data, error } = await supabase
@@ -37,6 +44,22 @@ function App() {
   useEffect(() => {
     fetchProfessionals();
   }, []);
+
+  const filteredProfessionals = useMemo(() => {
+    return professionals.filter((pro) => {
+      const professionText = `${pro.profession || ""} ${pro.category || ""}`.toLowerCase();
+      const cityText = `${pro.city || ""}`.toLowerCase();
+
+      return (
+        professionText.includes(searchProfession.toLowerCase()) &&
+        cityText.includes(searchCity.toLowerCase())
+      );
+    });
+  }, [professionals, searchProfession, searchCity]);
+
+  const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
+
+  const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
 
   const saveProfessional = async () => {
     if (
@@ -58,296 +81,206 @@ function App() {
 
     setSubmitted(true);
     setFormData({
-  name: "",
-  profession: "",
-  city: "",
-  phone: "",
-  email: "",
-  whatsapp: "",
-  category: "",
-  description: "",
-});
+      name: "",
+      profession: "",
+      city: "",
+      phone: "",
+      email: "",
+      whatsapp: "",
+      category: "",
+      description: "",
+    });
 
     fetchProfessionals();
   };
 
-  const filteredProfessionals = professionals.filter((pro) => {
-    const professionMatch = pro.profession
-      ?.toLowerCase()
-      .includes(searchProfession.toLowerCase());
-
-    const cityMatch = pro.city
-      ?.toLowerCase()
-      .includes(searchCity.toLowerCase());
-
-    return professionMatch && cityMatch;
-  });
-
-  const setCategory = (category) => {
-    setSearchProfession(category);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const clearSearch = () => {
-    setSearchProfession("");
-    setSearchCity("");
-  };
-
- const cleanPhone = (phone) => {
-  return phone?.replace(/\D/g, "") || "";
-};
-
-const getWhatsAppNumber = (pro) => {
-  return cleanPhone(pro.whatsapp || pro.phone);
-};
   if (showRegister) {
     return (
-      <div className="container">
-        <button className="back-btn" onClick={() => setShowRegister(false)}>
-          ← Kthehu
-        </button>
-
-        <div className="profile-card">
-          <div className="form-badge">Regjistrim falas</div>
-
-          <h1>Regjistrohu si profesionist</h1>
-
-          <p className="muted">
-            Krijo profilin tënd falas në Fix24 dhe bëhu i dukshëm për klientët
-            që kërkojnë shërbime në qytetin tënd.
-          </p>
-
-          <input
-            placeholder="Emri dhe mbiemri"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-
-          <input
-            placeholder="Profesioni p.sh. Hidraulik"
-            value={formData.profession}
-            onChange={(e) =>
-              setFormData({ ...formData, profession: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Qyteti p.sh. Frankfurt"
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          />
-
-          <input
-            placeholder="Numri i telefonit"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
-<input
-  placeholder="Email"
-  value={formData.email}
-  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-/>
-
-<input
-  placeholder="WhatsApp (nëse ndryshon nga telefoni)"
-  value={formData.whatsapp}
-  onChange={(e) =>
-    setFormData({ ...formData, whatsapp: e.target.value })
-  }
-/>
-
-<select
-  value={formData.category}
-  onChange={(e) =>
-    setFormData({ ...formData, category: e.target.value })
-  }
->
-  <option value="">Zgjidh kategorinë</option>
-  <option value="Elektricist">⚡ Elektricist</option>
-  <option value="Hidraulik">🚰 Hidraulik</option>
-  <option value="Mekanik">🔧 Mekanik</option>
-  <option value="Bojaxhi">🎨 Bojaxhi</option>
-</select>
-          <textarea
-            placeholder="Përshkruaj shkurt shërbimet që ofron"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-          />
-
-          <button className="primary-btn full-btn" onClick={saveProfessional}>
-            Dërgo regjistrimin
+      <div className="page">
+        <div className="register-shell">
+          <button className="ghost-btn" onClick={() => setShowRegister(false)}>
+            ← Kthehu
           </button>
 
-          {submitted && (
-            <p className="success">✅ Regjistrimi u dërgua me sukses.</p>
-          )}
+          <div className="register-card">
+            <span className="eyebrow">Fix24 Professional</span>
+            <h1>Regjistro profilin tënd profesional</h1>
+            <p>
+              Plotëso të dhënat bazë. Profili yt do të shfaqet në platformë dhe klientët
+              mund të të kontaktojnë direkt.
+            </p>
+
+            <div className="form-grid">
+              <input placeholder="Emri dhe mbiemri" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              <input placeholder="Profesioni p.sh. Hidraulik" value={formData.profession} onChange={(e) => setFormData({ ...formData, profession: e.target.value })} />
+              <input placeholder="Qyteti p.sh. Frankfurt" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} />
+              <input placeholder="Telefoni" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+              <input placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+              <input placeholder="WhatsApp" value={formData.whatsapp} onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })} />
+
+              <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                <option value="">Zgjidh kategorinë</option>
+                {categories.map((cat) => (
+                  <option key={cat.name} value={cat.name}>
+                    {cat.icon} {cat.name}
+                  </option>
+                ))}
+              </select>
+
+              <textarea
+                placeholder="Përshkruaj shkurt shërbimet që ofron"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              />
+            </div>
+
+            <button className="main-btn full" onClick={saveProfessional}>
+              Dërgo regjistrimin
+            </button>
+
+            {submitted && <div className="success">✅ Regjistrimi u dërgua me sukses.</div>}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
+    <div className="page">
       <header className="hero">
-        <nav className="top-nav">
-          <div className="logo">Fix24</div>
+        <nav className="nav">
+          <div className="brand">
+            <div className="brand-mark">F24</div>
+            <div>
+              <strong>Fix24</strong>
+              <span>Professional Services</span>
+            </div>
+          </div>
 
-          <button className="nav-btn" onClick={() => setShowRegister(true)}>
-            Regjistrohu falas
+          <button className="nav-action" onClick={() => setShowRegister(true)}>
+            Regjistro profesionist
           </button>
         </nav>
 
-        <div className="hero-content">
-          <span className="hero-badge">Platformë shqiptare për shërbime</span>
+        <div className="hero-grid">
+          <div className="hero-left">
+            <span className="eyebrow">Platformë moderne për shërbime</span>
+            <h1>Gjej profesionistin e duhur, shpejt dhe me besim.</h1>
+            <p>
+              Kërko sipas profesionit dhe qytetit. Krahaso profilet, shiko të dhënat dhe
+              kontakto direkt me telefon ose WhatsApp.
+            </p>
 
-          <h1>Gjej profesionistin e duhur pranë teje</h1>
+            <div className="search-panel">
+              <input
+                placeholder="Çfarë shërbimi kërkon?"
+                value={searchProfession}
+                onChange={(e) => setSearchProfession(e.target.value)}
+              />
 
-          <p>
-            Kërko sipas profesionit dhe qytetit. Kontakto direkt me telefon ose
-            WhatsApp pa ndërmjetësim.
-          </p>
+              <input
+                placeholder="Në cilin qytet?"
+                value={searchCity}
+                onChange={(e) => setSearchCity(e.target.value)}
+              />
 
-          <div className="search">
-            <input
-              placeholder="Kërko profesion..."
-              value={searchProfession}
-              onChange={(e) => setSearchProfession(e.target.value)}
-            />
+              <button className="main-btn">Kërko</button>
+            </div>
 
-            <input
-              placeholder="Qyteti..."
-              value={searchCity}
-              onChange={(e) => setSearchCity(e.target.value)}
-            />
-
-            <button className="primary-btn">Kërko</button>
+            <div className="hero-stats">
+              <div><strong>{professionals.length}+</strong><span>Profesionistë</span></div>
+              <div><strong>24/7</strong><span>Kërkim online</span></div>
+              <div><strong>0€</strong><span>Kontakt direkt</span></div>
+            </div>
           </div>
 
-          {(searchProfession || searchCity) && (
-            <button className="clear-btn" onClick={clearSearch}>
-              Pastro kërkimin
-            </button>
-          )}
+          <div className="hero-card">
+            <div className="mini-card active">
+              <span>Verified</span>
+              <strong>Hidraulik në qytetin tënd</strong>
+              <p>Telefon & WhatsApp direkt</p>
+            </div>
+            <div className="mini-card">
+              <span>Fast match</span>
+              <strong>Kërkim sipas lokacionit</strong>
+              <p>Rezultate të filtrueshme</p>
+            </div>
+          </div>
         </div>
       </header>
 
-      <section className="info-section">
-        <div className="info-card">
-          <strong>1. Kërko</strong>
-          <p>Zgjidh profesionin dhe qytetin ku të duhet shërbimi.</p>
+      <section className="steps">
+        <div><span>01</span><strong>Kërko</strong><p>Zgjidh profesionin dhe qytetin.</p></div>
+        <div><span>02</span><strong>Krahaso</strong><p>Shiko profilet dhe përshkrimin.</p></div>
+        <div><span>03</span><strong>Kontakto</strong><p>Telefono ose shkruaj në WhatsApp.</p></div>
+      </section>
+
+      <section className="section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Kategoritë</span>
+            <h2>Shërbimet më të kërkuara</h2>
+          </div>
+          <span>{categories.length} kategori</span>
         </div>
 
-        <div className="info-card">
-          <strong>2. Krahaso</strong>
-          <p>Shiko profesionistët e regjistruar dhe përshkrimin e tyre.</p>
-        </div>
-
-        <div className="info-card">
-          <strong>3. Kontakto</strong>
-          <p>Telefono ose shkruaj direkt në WhatsApp.</p>
+        <div className="category-grid">
+          {categories.map((cat) => (
+            <button key={cat.name} className="category-card" onClick={() => setSearchProfession(cat.name)}>
+              <div>{cat.icon}</div>
+              <strong>{cat.name}</strong>
+              <p>{cat.text}</p>
+            </button>
+          ))}
         </div>
       </section>
 
-      <section>
-        <div className="section-title">
-          <h2>Kategoritë kryesore</h2>
-          <span>Shërbimet më të kërkuara</span>
-        </div>
-
-        <div className="categories">
-          <button
-            className="category-card"
-            onClick={() => setCategory("Elektricist")}
-          >
-            <span>⚡</span>
-            Elektricist
-          </button>
-
-          <button
-            className="category-card"
-            onClick={() => setCategory("Hidraulik")}
-          >
-            <span>🚰</span>
-            Hidraulik
-          </button>
-
-          <button className="category-card" onClick={() => setCategory("Mekanik")}>
-            <span>🔧</span>
-            Mekanik
-          </button>
-
-          <button className="category-card" onClick={() => setCategory("Bojaxhi")}>
-            <span>🎨</span>
-            Bojaxhi
-          </button>
-        </div>
-      </section>
-
-      <section>
-        <div className="section-title">
-          <h2>Profesionistët e regjistruar</h2>
+      <section className="section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">Marketplace</span>
+            <h2>Profesionistët e regjistruar</h2>
+          </div>
           <span>{filteredProfessionals.length} rezultat/e</span>
         </div>
 
-        <div className="professionals-grid">
+        <div className="pro-grid">
           {filteredProfessionals.length === 0 ? (
-            <div className="empty-card">
+            <div className="empty-state">
               <h3>Nuk u gjet asnjë profesionist</h3>
               <p>Provo një profesion ose qytet tjetër.</p>
             </div>
           ) : (
             filteredProfessionals.map((pro) => (
-              <div className="pro-card" key={pro.id}>
-  <div className="pro-top">
-    <div className="avatar">
-      {pro.name?.charAt(0)?.toUpperCase()}
-    </div>
+              <article className="pro-card" key={pro.id}>
+                <div className="pro-header">
+                  <div className="avatar">{pro.name?.charAt(0)?.toUpperCase()}</div>
+                  <div>
+                    <h3>{pro.name}</h3>
+                    <p>{pro.profession}</p>
+                  </div>
+                </div>
 
-    <div>
-      <h3>{pro.name}</h3>
-      <p>{pro.profession}</p>
+                <div className="rating-line">
+                  <span>⭐</span>
+                  <strong>{pro.reviews > 0 ? `${pro.rating || 5}.0` : "I ri në Fix24"}</strong>
+                  {pro.reviews > 0 && <small>({pro.reviews} vlerësime)</small>}
+                </div>
 
-      <div className="rating">
-        ⭐ {pro.reviews > 0 ? `${pro.rating || 5.0} (${pro.reviews} vlerësime)` : "I ri në Fix24"}
-      </div>
-    </div>
-  </div>
+                <div className="meta-row">
+                  <span>📍 {pro.city}</span>
+                  {pro.category && <b>{pro.category}</b>}
+                </div>
 
-  <div className="pro-meta">
-    <span>📍 {pro.city}</span>
+                {pro.description && <p className="pro-desc">{pro.description}</p>}
 
-    {pro.category && (
-      <span className="category-badge">
-        {pro.category}
-      </span>
-    )}
-  </div>
+                <div className="phone-line">📞 {pro.phone}</div>
 
-  {pro.description && (
-    <p className="description">{pro.description}</p>
-  )}
-
-  <div className="pro-contact">
-    <span>📞 {pro.phone}</span>
-  </div>
-
-  <div className="actions">
-    <a href={`tel:${pro.phone}`} className="call-btn">
-      Telefono
-    </a>
-
-    <a
-      href={`https://wa.me/${getWhatsAppNumber(pro)}`}
-      target="_blank"
-      rel="noreferrer"
-      className="whatsapp-btn"
-    >
-      WhatsApp
-    </a>
-  </div>
-</div>
+                <div className="pro-actions">
+                  <a href={`tel:${pro.phone}`} className="call-btn">Telefono</a>
+                  <a href={`https://wa.me/${getWhatsAppNumber(pro)}`} target="_blank" rel="noreferrer" className="whatsapp-btn">WhatsApp</a>
+                </div>
+              </article>
             ))
           )}
         </div>
