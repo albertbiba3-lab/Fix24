@@ -37,10 +37,10 @@ function App() {
 
   const saveProfessional = async () => {
     if (
-      !formData.name ||
-      !formData.profession ||
-      !formData.city ||
-      !formData.phone
+      !formData.name.trim() ||
+      !formData.profession.trim() ||
+      !formData.city.trim() ||
+      !formData.phone.trim()
     ) {
       alert("Ju lutem plotësoni emrin, profesionin, qytetin dhe telefonin.");
       return;
@@ -79,6 +79,16 @@ function App() {
 
   const setCategory = (category) => {
     setSearchProfession(category);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const clearSearch = () => {
+    setSearchProfession("");
+    setSearchCity("");
+  };
+
+  const cleanPhone = (phone) => {
+    return phone.replace(/\D/g, "");
   };
 
   if (showRegister) {
@@ -89,9 +99,13 @@ function App() {
         </button>
 
         <div className="profile-card">
+          <div className="form-badge">Regjistrim falas</div>
+
           <h1>Regjistrohu si profesionist</h1>
+
           <p className="muted">
-            Regjistrimi është falas. Më vonë do të shtohen opsione premium.
+            Krijo profilin tënd falas në Fix24 dhe bëhu i dukshëm për klientët
+            që kërkojnë shërbime në qytetin tënd.
           </p>
 
           <input
@@ -121,18 +135,20 @@ function App() {
           />
 
           <textarea
-            placeholder="Përshkruaj shërbimet që ofron"
+            placeholder="Përshkruaj shkurt shërbimet që ofron"
             value={formData.description}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
           />
 
-          <button className="primary-btn" onClick={saveProfessional}>
+          <button className="primary-btn full-btn" onClick={saveProfessional}>
             Dërgo regjistrimin
           </button>
 
-          {submitted && <p className="success">✅ Regjistrimi u dërgua me sukses.</p>}
+          {submitted && (
+            <p className="success">✅ Regjistrimi u dërgua me sukses.</p>
+          )}
         </div>
       </div>
     );
@@ -141,53 +157,96 @@ function App() {
   return (
     <div className="container">
       <header className="hero">
-        <div className="logo">Fix24</div>
+        <nav className="top-nav">
+          <div className="logo">Fix24</div>
 
-        <h1>Gjej profesionistin e duhur pranë teje</h1>
-        <p>
-          Platformë shqiptare për të gjetur elektricistë, hidraulikë,
-          mekanikë, bojaxhinj dhe profesionistë të tjerë.
-        </p>
+          <button className="nav-btn" onClick={() => setShowRegister(true)}>
+            Regjistrohu falas
+          </button>
+        </nav>
 
-        <div className="search">
-          <input
-            placeholder="Kërko profesion..."
-            value={searchProfession}
-            onChange={(e) => setSearchProfession(e.target.value)}
-          />
+        <div className="hero-content">
+          <span className="hero-badge">Platformë shqiptare për shërbime</span>
 
-          <input
-            placeholder="Qyteti..."
-            value={searchCity}
-            onChange={(e) => setSearchCity(e.target.value)}
-          />
+          <h1>Gjej profesionistin e duhur pranë teje</h1>
 
-          <button className="primary-btn">Kërko</button>
+          <p>
+            Kërko sipas profesionit dhe qytetit. Kontakto direkt me telefon ose
+            WhatsApp pa ndërmjetësim.
+          </p>
+
+          <div className="search">
+            <input
+              placeholder="Kërko profesion..."
+              value={searchProfession}
+              onChange={(e) => setSearchProfession(e.target.value)}
+            />
+
+            <input
+              placeholder="Qyteti..."
+              value={searchCity}
+              onChange={(e) => setSearchCity(e.target.value)}
+            />
+
+            <button className="primary-btn">Kërko</button>
+          </div>
+
+          {(searchProfession || searchCity) && (
+            <button className="clear-btn" onClick={clearSearch}>
+              Pastro kërkimin
+            </button>
+          )}
         </div>
-
-        <button className="register-btn" onClick={() => setShowRegister(true)}>
-          Regjistrohu falas si profesionist
-        </button>
       </header>
 
+      <section className="info-section">
+        <div className="info-card">
+          <strong>1. Kërko</strong>
+          <p>Zgjidh profesionin dhe qytetin ku të duhet shërbimi.</p>
+        </div>
+
+        <div className="info-card">
+          <strong>2. Krahaso</strong>
+          <p>Shiko profesionistët e regjistruar dhe përshkrimin e tyre.</p>
+        </div>
+
+        <div className="info-card">
+          <strong>3. Kontakto</strong>
+          <p>Telefono ose shkruaj direkt në WhatsApp.</p>
+        </div>
+      </section>
+
       <section>
-        <h2>Kategoritë</h2>
+        <div className="section-title">
+          <h2>Kategoritë kryesore</h2>
+          <span>Shërbimet më të kërkuara</span>
+        </div>
 
         <div className="categories">
-          <button className="category-card" onClick={() => setCategory("Elektricist")}>
-            ⚡ Elektricist
+          <button
+            className="category-card"
+            onClick={() => setCategory("Elektricist")}
+          >
+            <span>⚡</span>
+            Elektricist
           </button>
 
-          <button className="category-card" onClick={() => setCategory("Hidraulik")}>
-            🚰 Hidraulik
+          <button
+            className="category-card"
+            onClick={() => setCategory("Hidraulik")}
+          >
+            <span>🚰</span>
+            Hidraulik
           </button>
 
           <button className="category-card" onClick={() => setCategory("Mekanik")}>
-            🔧 Mekanik
+            <span>🔧</span>
+            Mekanik
           </button>
 
           <button className="category-card" onClick={() => setCategory("Bojaxhi")}>
-            🎨 Bojaxhi
+            <span>🎨</span>
+            Bojaxhi
           </button>
         </div>
       </section>
@@ -201,7 +260,8 @@ function App() {
         <div className="professionals-grid">
           {filteredProfessionals.length === 0 ? (
             <div className="empty-card">
-              Nuk u gjet asnjë profesionist me këtë kërkim.
+              <h3>Nuk u gjet asnjë profesionist</h3>
+              <p>Provo një profesion ose qytet tjetër.</p>
             </div>
           ) : (
             filteredProfessionals.map((pro) => (
@@ -217,7 +277,10 @@ function App() {
                   </div>
                 </div>
 
-                <p className="location">📍 {pro.city}</p>
+                <div className="pro-meta">
+                  <span>📍 {pro.city}</span>
+                  <span className="free-badge">Falas</span>
+                </div>
 
                 {pro.description && (
                   <p className="description">{pro.description}</p>
@@ -229,7 +292,7 @@ function App() {
                   </a>
 
                   <a
-                    href={`https://wa.me/${pro.phone.replace(/\D/g, "")}`}
+                    href={`https://wa.me/${cleanPhone(pro.phone)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="whatsapp-btn"
