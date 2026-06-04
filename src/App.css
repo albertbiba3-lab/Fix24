@@ -1,78 +1,250 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f7fb;
+  background: #f4f7fb;
+  color: #111827;
 }
 
 .container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 40px;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 30px 18px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #0f172a, #1e40af);
+  color: white;
+  border-radius: 28px;
+  padding: 45px 25px;
   text-align: center;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
 }
 
 .logo {
-  font-size: 60px;
-  font-weight: bold;
-  color: #0d6efd;
+  display: inline-block;
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin: 10px 0;
+}
+
+.hero p {
+  max-width: 680px;
+  margin: 0 auto 25px;
+  color: #dbeafe;
 }
 
 .search {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.search input {
-  width: 350px;
+  gap: 12px;
+  background: white;
   padding: 12px;
+  border-radius: 18px;
+  max-width: 850px;
+  margin: 25px auto;
 }
 
-.search button,
-.register-btn {
-  padding: 12px 20px;
-  background: #0d6efd;
-  color: white;
+input,
+textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  font-size: 16px;
+  outline: none;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.primary-btn,
+.register-btn,
+.back-btn {
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.categories {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  max-width: 500px;
-  margin: 30px auto;
+.primary-btn {
+  background: #2563eb;
+  color: white;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+.register-btn {
+  background: #22c55e;
+  color: white;
+  margin-top: 10px;
 }
+
+.back-btn {
+  background: white;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+section {
+  margin-top: 45px;
+}
+
+h2 {
+  font-size: 28px;
+  margin-bottom: 18px;
+}
+
+.categories,
+.professionals-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.category-card {
+  border: none;
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.category-card:hover,
+.pro-card:hover {
+  transform: translateY(-4px);
+}
+
+.pro-card,
+.profile-card,
+.empty-card {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
 .profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .profile-card input,
 .profile-card textarea {
-  width: 400px;
-  max-width: 90%;
+  margin-bottom: 14px;
+}
+
+.pro-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  background: #2563eb;
+  color: white;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.pro-card h3 {
+  margin: 0;
+}
+
+.pro-card p {
+  margin: 6px 0;
+}
+
+.location {
+  margin-top: 15px !important;
+  color: #374151;
+}
+
+.description {
+  color: #6b7280;
+  min-height: 45px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.call-btn,
+.whatsapp-btn {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
   padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
-.profile-card textarea {
-  height: 120px;
+.call-btn {
+  background: #e0ecff;
+  color: #1d4ed8;
 }
 
-.register-btn {
-  margin-top: 15px;
+.whatsapp-btn {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title span {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.success {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.muted {
+  color: #6b7280;
+}
+
+@media (max-width: 850px) {
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .search {
+    flex-direction: column;
+  }
+
+  .categories,
+  .professionals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
 }
