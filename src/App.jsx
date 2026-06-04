@@ -10,12 +10,15 @@ function App() {
   const [searchCity, setSearchCity] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "",
-    profession: "",
-    city: "",
-    phone: "",
-    description: "",
-  });
+  name: "",
+  profession: "",
+  city: "",
+  phone: "",
+  email: "",
+  whatsapp: "",
+  category: "",
+  description: "",
+});
 
   const fetchProfessionals = async () => {
     const { data, error } = await supabase
@@ -55,12 +58,15 @@ function App() {
 
     setSubmitted(true);
     setFormData({
-      name: "",
-      profession: "",
-      city: "",
-      phone: "",
-      description: "",
-    });
+  name: "",
+  profession: "",
+  city: "",
+  phone: "",
+  email: "",
+  whatsapp: "",
+  category: "",
+  description: "",
+});
 
     fetchProfessionals();
   };
@@ -87,10 +93,13 @@ function App() {
     setSearchCity("");
   };
 
-  const cleanPhone = (phone) => {
-    return phone.replace(/\D/g, "");
-  };
+ const cleanPhone = (phone) => {
+  return phone?.replace(/\D/g, "") || "";
+};
 
+const getWhatsAppNumber = (pro) => {
+  return cleanPhone(pro.whatsapp || pro.phone);
+};
   if (showRegister) {
     return (
       <div className="container">
@@ -133,7 +142,32 @@ function App() {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
+<input
+  placeholder="Email"
+  value={formData.email}
+  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+/>
 
+<input
+  placeholder="WhatsApp (nëse ndryshon nga telefoni)"
+  value={formData.whatsapp}
+  onChange={(e) =>
+    setFormData({ ...formData, whatsapp: e.target.value })
+  }
+/>
+
+<select
+  value={formData.category}
+  onChange={(e) =>
+    setFormData({ ...formData, category: e.target.value })
+  }
+>
+  <option value="">Zgjidh kategorinë</option>
+  <option value="Elektricist">⚡ Elektricist</option>
+  <option value="Hidraulik">🚰 Hidraulik</option>
+  <option value="Mekanik">🔧 Mekanik</option>
+  <option value="Bojaxhi">🎨 Bojaxhi</option>
+</select>
           <textarea
             placeholder="Përshkruaj shkurt shërbimet që ofron"
             value={formData.description}
@@ -266,41 +300,54 @@ function App() {
           ) : (
             filteredProfessionals.map((pro) => (
               <div className="pro-card" key={pro.id}>
-                <div className="pro-top">
-                  <div className="avatar">
-                    {pro.name?.charAt(0)?.toUpperCase()}
-                  </div>
+  <div className="pro-top">
+    <div className="avatar">
+      {pro.name?.charAt(0)?.toUpperCase()}
+    </div>
 
-                  <div>
-                    <h3>{pro.name}</h3>
-                    <p>{pro.profession}</p>
-                  </div>
-                </div>
+    <div>
+      <h3>{pro.name}</h3>
+      <p>{pro.profession}</p>
 
-                <div className="pro-meta">
-                  <span>📍 {pro.city}</span>
-                  <span className="free-badge">Falas</span>
-                </div>
+      <div className="rating">
+        ⭐ {pro.reviews > 0 ? `${pro.rating || 5.0} (${pro.reviews} vlerësime)` : "I ri në Fix24"}
+      </div>
+    </div>
+  </div>
 
-                {pro.description && (
-                  <p className="description">{pro.description}</p>
-                )}
+  <div className="pro-meta">
+    <span>📍 {pro.city}</span>
 
-                <div className="actions">
-                  <a href={`tel:${pro.phone}`} className="call-btn">
-                    Telefono
-                  </a>
+    {pro.category && (
+      <span className="category-badge">
+        {pro.category}
+      </span>
+    )}
+  </div>
 
-                  <a
-                    href={`https://wa.me/${cleanPhone(pro.phone)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="whatsapp-btn"
-                  >
-                    WhatsApp
-                  </a>
-                </div>
-              </div>
+  {pro.description && (
+    <p className="description">{pro.description}</p>
+  )}
+
+  <div className="pro-contact">
+    <span>📞 {pro.phone}</span>
+  </div>
+
+  <div className="actions">
+    <a href={`tel:${pro.phone}`} className="call-btn">
+      Telefono
+    </a>
+
+    <a
+      href={`https://wa.me/${getWhatsAppNumber(pro)}`}
+      target="_blank"
+      rel="noreferrer"
+      className="whatsapp-btn"
+    >
+      WhatsApp
+    </a>
+  </div>
+</div>
             ))
           )}
         </div>
