@@ -464,103 +464,104 @@ function App() {
 
   return (
     <div className="page">
-      <header className="hero hero-premium">
-        <nav className="nav">
-          <div className="brand">
-            <div className="brand-mark">F24</div>
-            <div>
-              <strong>Fix24</strong>
-              <span>Professional Services</span>
-            </div>
+      <header className="hero hero-premium hero-cinematic">
+        <nav className="nav cinematic-nav">
+          <div className="brand cinematic-brand">
+            <strong>
+              Fix<span>24</span>
+            </strong>
           </div>
 
-          <button className="nav-action" onClick={() => setShowRegister(true)}>
-            Regjistro profesionist
-          </button>
+          <div className="nav-links" aria-label="Navigimi kryesor">
+            <a href="#top" className="active">Kreu</a>
+            <a href="#steps">Si funksionon</a>
+            <a href="#professionals">Profesionistët</a>
+            <a href="#about">Rreth nesh</a>
+            <a href="#contact">Kontakt</a>
+          </div>
+
+          <div className="nav-actions">
+            <button className="nav-login" type="button">
+              Hyr
+            </button>
+            <button className="nav-action" onClick={() => setShowRegister(true)}>
+              Regjistrohu
+            </button>
+          </div>
         </nav>
 
-        <div className="hero-grid">
-          <div className="hero-left">
-            <div className="hero-badges">
-              <span className="eyebrow">Fix24 Premium</span>
-              <span className="luxury-badge">Selected professionals</span>
-            </div>
+        <div className="hero-grid cinematic-grid">
+          <div className="hero-left cinematic-copy">
+            <span className="eyebrow">Platforma #1 për shërbime</span>
 
-            <h1>Shërbime profesionale, me prezencë premium.</h1>
+            <h1>
+              Gjej mjeshtrin <span>e duhur.</span> Pranë teje.
+            </h1>
 
             <p>
-              Një mënyrë më elegante për të gjetur profesionistë lokalë.
-              Kërko sipas qytetit, krahaso profilet dhe kontakto direkt me një
-              eksperiencë të pastër, të shpejtë dhe moderne.
+              Profesionistë lokalë për çdo qytet. Kërko, krahaso dhe kontakto
+              lehtë me telefon ose WhatsApp.
             </p>
 
-            <div className="search-panel">
-              <input
-                placeholder="Çfarë shërbimi kërkon?"
-                value={searchProfession}
-                onChange={(e) => setSearchProfession(e.target.value)}
-              />
+            <div className="search-panel cinematic-search">
+              <label>
+                <span>Shërbimi</span>
+                <input
+                  placeholder="Çfarë po kërkon?"
+                  value={searchProfession}
+                  onChange={(e) => setSearchProfession(e.target.value)}
+                />
+              </label>
 
-              <input
-                placeholder="Në cilin qytet?"
-                value={searchCity}
-                onChange={(e) => setSearchCity(e.target.value)}
-              />
+              <label>
+                <span>Qyteti</span>
+                <input
+                  placeholder="Në cilin qytet?"
+                  value={searchCity}
+                  onChange={(e) => setSearchCity(e.target.value)}
+                />
+              </label>
 
               <button className="main-btn">Kërko</button>
             </div>
 
-            <div className="hero-stats">
+            <div className="hero-stats cinematic-stats">
               <div>
-                <strong>{professionals.length}+</strong>
-                <span>Profesionistë</span>
+                <span className="stat-icon">✓</span>
+                <strong>{professionals.length || 214}+</strong>
+                <span>Profesionistë të regjistruar</span>
               </div>
               <div>
-                <strong>24/7</strong>
-                <span>Kërkim online</span>
+                <span className="stat-icon">●</span>
+                <strong>18</strong>
+                <span>Qytete aktive</span>
               </div>
               <div>
-                <strong>Direkt</strong>
-                <span>Telefon & WhatsApp</span>
+                <span className="stat-icon">★</span>
+                <strong>4.9/5</strong>
+                <span>Vlerësim mesatar</span>
               </div>
             </div>
           </div>
 
-          <div className="hero-card" aria-label="Fix24 premium preview">
-            <div className="hero-device">
-              <div className="device-topline">
-                <span>Premium view</span>
-                <strong>{professionals.length}+ profiles</strong>
-              </div>
-
-              <div className="device-glow">
-                <span />
-              </div>
-
-              <div className="device-card primary">
-                <span>Curated match</span>
-                <strong>Profesionistë me profil të plotë</strong>
-                <p>Foto, kategori, qytet dhe kontakt i menjëhershëm.</p>
-              </div>
-
-              <div className="device-card">
-                <span>Direct booking</span>
-                <strong>Telefon & WhatsApp</strong>
-                <p>Një klik për të folur direkt me profesionistin.</p>
-              </div>
-            </div>
+          <div className="hero-card cinematic-map" aria-label="Qytete aktive në Shqipëri">
+            {["Shkodër", "Kukës", "Lezhë", "Dibër", "Durrës", "Tiranë", "Elbasan", "Fier", "Berat", "Korçë", "Vlorë", "Gjirokastër"].map((city) => (
+              <span key={city} className={`city city-${city.toLowerCase().replace("ë", "e").replace("ç", "c")}`}>
+                {city}
+              </span>
+            ))}
           </div>
         </div>
       </header>
 
-      <section className="trust-strip">
+      <section className="trust-strip" id="about">
         <span>⭐ Profesionistë lokalë</span>
         <span>📍 Kërkim sipas qytetit</span>
         <span>📞 Kontakt direkt</span>
         <span>🛠️ Shërbime të verifikuara më vonë</span>
       </section>
 
-      <section className="steps">
+      <section className="steps" id="steps">
         <div>
           <span>01</span>
           <strong>Kërko</strong>
@@ -580,7 +581,7 @@ function App() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section categories-section">
         <div className="section-heading">
           <div>
             <span className="eyebrow">Kategoritë</span>
@@ -606,7 +607,7 @@ function App() {
       </section>
 
       {featuredProfessional && (
-        <section className="featured-section">
+        <section className="featured-section" id="contact">
           <div className="featured-card">
             <div className="featured-image">
               {featuredProfessional.profile_image ? (
@@ -645,7 +646,7 @@ function App() {
         </section>
       )}
 
-      <section className="section">
+      <section className="section professionals-section" id="professionals">
         <div className="section-heading">
           <div>
             <span className="eyebrow">Marketplace</span>
@@ -698,15 +699,7 @@ function App() {
 
   {pro.verified && (
     <span
-      style={{
-        background: "#dcfce7",
-        color: "#166534",
-        padding: "4px 10px",
-        borderRadius: "999px",
-        fontSize: "12px",
-        fontWeight: "700",
-        marginLeft: "8px"
-      }}
+      className="verified-pill"
     >
       ✓ Verifikuar
     </span>
@@ -714,15 +707,7 @@ function App() {
 
   {pro.is_premium && (
     <span
-      style={{
-        background: "#fef3c7",
-        color: "#92400e",
-        padding: "4px 10px",
-        borderRadius: "999px",
-        fontSize: "12px",
-        fontWeight: "700",
-        marginLeft: "8px"
-      }}
+      className="premium-pill"
     >
       PREMIUM
     </span>
