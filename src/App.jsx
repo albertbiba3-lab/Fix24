@@ -464,7 +464,7 @@ function App() {
 
   return (
     <div className="page">
-      <header className="hero">
+      <header className="hero hero-premium">
         <nav className="nav">
           <div className="brand">
             <div className="brand-mark">F24</div>
@@ -481,13 +481,17 @@ function App() {
 
         <div className="hero-grid">
           <div className="hero-left">
-            <span className="eyebrow">Platformë moderne për shërbime</span>
+            <div className="hero-badges">
+              <span className="eyebrow">Fix24 Premium</span>
+              <span className="luxury-badge">Selected professionals</span>
+            </div>
 
-            <h1>Gjej profesionistin e duhur, shpejt dhe me besim.</h1>
+            <h1>Shërbime profesionale, me prezencë premium.</h1>
 
             <p>
-              Kërko sipas profesionit dhe qytetit. Krahaso profilet, shiko të
-              dhënat dhe kontakto direkt me telefon ose WhatsApp.
+              Një mënyrë më elegante për të gjetur profesionistë lokalë.
+              Kërko sipas qytetit, krahaso profilet dhe kontakto direkt me një
+              eksperiencë të pastër, të shpejtë dhe moderne.
             </p>
 
             <div className="search-panel">
@@ -522,17 +526,28 @@ function App() {
             </div>
           </div>
 
-          <div className="hero-card">
-            <div className="mini-card active">
-              <span>Verified style</span>
-              <strong>Profile profesionale</strong>
-              <p>Foto, kategori, qytet dhe kontakt direkt.</p>
-            </div>
+          <div className="hero-card" aria-label="Fix24 premium preview">
+            <div className="hero-device">
+              <div className="device-topline">
+                <span>Premium view</span>
+                <strong>{professionals.length}+ profiles</strong>
+              </div>
 
-            <div className="mini-card">
-              <span>Fast match</span>
-              <strong>Kërkim sipas lokacionit</strong>
-              <p>Rezultate të thjeshta për klientët.</p>
+              <div className="device-glow">
+                <span />
+              </div>
+
+              <div className="device-card primary">
+                <span>Curated match</span>
+                <strong>Profesionistë me profil të plotë</strong>
+                <p>Foto, kategori, qytet dhe kontakt i menjëhershëm.</p>
+              </div>
+
+              <div className="device-card">
+                <span>Direct booking</span>
+                <strong>Telefon & WhatsApp</strong>
+                <p>Një klik për të folur direkt me profesionistin.</p>
+              </div>
             </div>
           </div>
         </div>
