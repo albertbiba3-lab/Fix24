@@ -2061,21 +2061,40 @@ body {
 .cinematic-map {
   position: relative;
   min-height: 620px;
-  background: transparent;
+  border: 1px solid rgba(229, 9, 20, 0.22);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 52% 22%, rgba(229, 9, 20, 0.18), transparent 24%),
+    radial-gradient(circle at 48% 72%, rgba(229, 9, 20, 0.14), transparent 26%),
+    rgba(4, 10, 16, 0.34);
+  box-shadow:
+    0 34px 95px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(3px);
 }
 
 .cinematic-map::before {
   content: "";
   position: absolute;
-  inset: 6% 5% 4% 16%;
-  border: 1px solid rgba(229, 9, 20, 0.32);
+  inset: 7% 18% 7% 20%;
+  border: 1px solid rgba(229, 9, 20, 0.58);
   background:
-    radial-gradient(circle at 43% 23%, rgba(229, 9, 20, 0.20), transparent 3%),
-    radial-gradient(circle at 54% 42%, rgba(229, 9, 20, 0.20), transparent 3%),
-    radial-gradient(circle at 46% 56%, rgba(229, 9, 20, 0.18), transparent 3%),
-    linear-gradient(145deg, rgba(229, 9, 20, 0.10), rgba(8, 14, 22, 0.18));
-  clip-path: polygon(42% 2%, 56% 11%, 70% 9%, 82% 20%, 76% 34%, 86% 48%, 78% 60%, 84% 74%, 72% 93%, 54% 86%, 39% 96%, 27% 82%, 32% 68%, 20% 55%, 30% 43%, 22% 28%, 34% 18%);
-  filter: drop-shadow(0 0 28px rgba(229, 9, 20, 0.42));
+    linear-gradient(145deg, rgba(229, 9, 20, 0.18), rgba(8, 14, 22, 0.16));
+  clip-path: polygon(46% 1%, 58% 8%, 68% 18%, 73% 31%, 68% 45%, 78% 57%, 72% 70%, 74% 82%, 63% 96%, 51% 89%, 43% 99%, 33% 86%, 36% 75%, 28% 63%, 35% 51%, 29% 39%, 35% 28%, 33% 17%);
+  filter:
+    drop-shadow(0 0 16px rgba(229, 9, 20, 0.55))
+    drop-shadow(0 0 42px rgba(229, 9, 20, 0.28));
+}
+
+.cinematic-map::after {
+  content: "Shqipëri";
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .city {
@@ -2100,18 +2119,18 @@ body {
   transform: translateY(-50%);
 }
 
-.city-shkoder { top: 20%; left: 30%; }
-.city-kukes { top: 25%; left: 58%; }
-.city-lezhe { top: 35%; left: 39%; }
-.city-diber { top: 43%; left: 62%; }
-.city-durres { top: 52%; left: 31%; }
-.city-tirane { top: 59%; left: 48%; }
-.city-elbasan { top: 64%; left: 68%; }
-.city-fier { top: 76%; left: 30%; }
-.city-berat { top: 79%; left: 58%; }
-.city-korce { top: 81%; left: 78%; }
-.city-vlore { top: 90%; left: 35%; }
-.city-gjirokaster { top: 93%; left: 57%; }
+.city-shkoder { top: 17%; left: 39%; }
+.city-kukes { top: 22%; left: 61%; }
+.city-lezhe { top: 29%; left: 42%; }
+.city-diber { top: 38%; left: 60%; }
+.city-durres { top: 47%; left: 40%; }
+.city-tirane { top: 50%; left: 48%; }
+.city-elbasan { top: 57%; left: 55%; }
+.city-fier { top: 68%; left: 43%; }
+.city-berat { top: 68%; left: 52%; }
+.city-korce { top: 76%; left: 63%; }
+.city-vlore { top: 82%; left: 40%; }
+.city-gjirokaster { top: 88%; left: 54%; }
 
 @media (max-width: 1100px) {
   .cinematic-nav {
