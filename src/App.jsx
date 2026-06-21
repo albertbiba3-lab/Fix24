@@ -546,13 +546,7 @@ function App() {
             </div>
           </div>
 
-          <div className="hero-card cinematic-map" aria-label="Qytete aktive në hartë">
-            {["Shkodër", "Kukës", "Lezhë", "Dibër", "Durrës", "Tiranë", "Elbasan", "Fier", "Berat", "Korçë", "Vlorë", "Gjirokastër"].map((city) => (
-              <span key={city} className={`city city-${city.toLowerCase().replace("ë", "e").replace("ç", "c")}`}>
-                {city}
-              </span>
-            ))}
-          </div>
+          <div className="hero-card cinematic-map" aria-hidden="true" />
         </div>
       </header>
 
