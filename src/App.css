@@ -2642,3 +2642,32 @@ body {
   position: relative;
   z-index: 2;
 }
+
+/* Stable crisp hero: image only in the first viewport */
+body {
+  background: #071018 !important;
+}
+
+.page::before {
+  display: none !important;
+}
+
+.hero-cinematic {
+  background:
+    linear-gradient(90deg, rgba(5, 10, 16, 0.86) 0%, rgba(5, 10, 16, 0.56) 42%, rgba(5, 10, 16, 0.24) 72%, rgba(5, 10, 16, 0.48) 100%),
+    linear-gradient(180deg, rgba(5, 10, 16, 0.08) 0%, rgba(5, 10, 16, 0.14) 56%, rgba(7, 16, 24, 0.84) 100%),
+    url("/assets/fix24-cinematic-hero.png") center top / cover no-repeat !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.hero-cinematic::before {
+  background:
+    radial-gradient(circle at 34% 38%, rgba(229, 9, 20, 0.18), transparent 32%),
+    linear-gradient(180deg, transparent 76%, rgba(7, 16, 24, 0.72) 100%) !important;
+}
+
+.page::after {
+  background:
+    linear-gradient(180deg, rgba(7, 16, 24, 0.92) 0%, rgba(7, 16, 24, 0.96) 260px, #071018 100%) !important;
+}
