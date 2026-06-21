@@ -495,7 +495,9 @@ function App() {
             <span className="eyebrow">Platforma #1 për shërbime</span>
 
             <h1>
-              Gjej mjeshtrin <span>e duhur.</span> Pranë teje.
+              <span className="title-line">Gjej mjeshtrin</span>
+              <span className="title-line accent">e duhur.</span>
+              <span className="title-line">Pranë teje.</span>
             </h1>
 
             <p>
@@ -544,7 +546,7 @@ function App() {
             </div>
           </div>
 
-          <div className="hero-card cinematic-map" aria-label="Qytete aktive në Shqipëri">
+          <div className="hero-card cinematic-map" aria-label="Qytete aktive në hartë">
             {["Shkodër", "Kukës", "Lezhë", "Dibër", "Durrës", "Tiranë", "Elbasan", "Fier", "Berat", "Korçë", "Vlorë", "Gjirokastër"].map((city) => (
               <span key={city} className={`city city-${city.toLowerCase().replace("ë", "e").replace("ç", "c")}`}>
                 {city}
