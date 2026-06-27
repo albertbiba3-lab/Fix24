@@ -2485,15 +2485,41 @@ body {
   }
 }
 
-/* Final hero stabilization */
+/* Stable cinematic hero */
+body {
+  background: #071018 !important;
+}
+
+.page::before,
+.page::after {
+  display: none !important;
+}
+
+.hero-cinematic {
+  position: relative;
+  min-height: 100svh;
+  background:
+    linear-gradient(90deg, rgba(5, 10, 16, 0.76) 0%, rgba(5, 10, 16, 0.40) 43%, rgba(5, 10, 16, 0.08) 72%, rgba(5, 10, 16, 0.25) 100%),
+    linear-gradient(180deg, rgba(5, 10, 16, 0.04) 0%, rgba(5, 10, 16, 0.08) 62%, rgba(7, 16, 24, 0.76) 100%),
+    var(--hero-background) center top / cover no-repeat !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.hero-cinematic::before {
+  background:
+    radial-gradient(circle at 34% 38%, rgba(229, 9, 20, 0.12), transparent 34%),
+    linear-gradient(180deg, transparent 78%, rgba(7, 16, 24, 0.64) 100%) !important;
+}
+
 .hero-cinematic .cinematic-grid {
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.72fr) !important;
+  grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.72fr) !important;
   align-items: center !important;
 }
 
 .hero-cinematic .cinematic-copy {
-  text-align: left !important;
   max-width: 760px;
+  text-align: left !important;
 }
 
 .hero-cinematic h1 {
@@ -2505,12 +2531,8 @@ body {
   text-align: left !important;
 }
 
-.hero-cinematic h1 span {
-  display: block !important;
-  color: #e50914 !important;
-}
-
 .hero-cinematic h1 .title-line {
+  display: block !important;
   color: #ffffff !important;
 }
 
@@ -2535,21 +2557,9 @@ body {
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  backdrop-filter: none !important;
 }
 
-.hero-cinematic .cinematic-map::after {
-  display: none !important;
-}
-
-.hero-cinematic .cinematic-map::before {
-  inset: 4% 8% 2% 14% !important;
-  border-color: rgba(229, 9, 20, 0.26) !important;
-  background: linear-gradient(145deg, rgba(229, 9, 20, 0.08), rgba(8, 14, 22, 0.08)) !important;
-  filter: drop-shadow(0 0 24px rgba(229, 9, 20, 0.34)) !important;
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
   .hero-cinematic .cinematic-grid {
     grid-template-columns: 1fr !important;
   }
@@ -2559,115 +2569,13 @@ body {
   }
 }
 
-/* Single cinematic background while scrolling */
-body {
-  background-image:
-    linear-gradient(90deg, rgba(5, 10, 16, 0.62) 0%, rgba(5, 10, 16, 0.26) 42%, rgba(5, 10, 16, 0.08) 72%, rgba(5, 10, 16, 0.32) 100%),
-    linear-gradient(180deg, rgba(5, 10, 16, 0) 0%, rgba(7, 16, 24, 0.24) 72%, #071018 100%),
-    url("/assets/fix24-cinematic-hero.png") !important;
-  background-position: center top, center top, center top !important;
-  background-size: cover, cover, cover !important;
-  background-attachment: fixed, fixed, fixed !important;
-  background-repeat: no-repeat !important;
-}
+@media (max-width: 720px) {
+  .hero-cinematic {
+    min-height: auto;
+    background-position: 58% top !important;
+  }
 
-.page {
-  position: relative;
-  background: transparent !important;
-}
-
-.page::after {
-  content: "";
-  position: absolute;
-  inset: calc(100svh - 34px) 0 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(7, 16, 24, 0.10) 0%, rgba(7, 16, 24, 0.72) 150px, rgba(7, 16, 24, 0.90) 430px, rgba(7, 16, 24, 0.94) 100%);
-}
-
-.page > * {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-cinematic {
-  background:
-    linear-gradient(90deg, rgba(5, 10, 16, 0.48) 0%, rgba(5, 10, 16, 0.18) 42%, rgba(5, 10, 16, 0.04) 72%, rgba(5, 10, 16, 0.20) 100%),
-    linear-gradient(180deg, rgba(5, 10, 16, 0) 0%, rgba(5, 10, 16, 0.03) 55%, rgba(5, 10, 16, 0.28) 100%) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.hero-cinematic::before {
-  background:
-    radial-gradient(circle at 34% 38%, rgba(229, 9, 20, 0.14), transparent 32%),
-    linear-gradient(180deg, transparent 76%, rgba(7, 16, 24, 0.55) 100%) !important;
-}
-
-.hero-cinematic::after {
-  height: 170px !important;
-  background: linear-gradient(180deg, transparent 0%, rgba(7, 16, 24, 0.18) 58%, rgba(7, 16, 24, 0) 100%) !important;
-}
-
-/* Crisp fixed background layer for production */
-body {
-  background: #071018 !important;
-}
-
-.page {
-  isolation: isolate;
-  position: relative;
-  background: transparent !important;
-}
-
-.page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(5, 10, 16, 0.58) 0%, rgba(5, 10, 16, 0.22) 43%, rgba(5, 10, 16, 0.06) 72%, rgba(5, 10, 16, 0.28) 100%),
-    linear-gradient(180deg, rgba(5, 10, 16, 0) 0%, rgba(7, 16, 24, 0.18) 72%, #071018 100%),
-    url("/assets/fix24-cinematic-hero.png") center top / cover no-repeat;
-  transform: translateZ(0);
-}
-
-.page::after {
-  z-index: 1;
-}
-
-.page > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Stable crisp hero: image only in the first viewport */
-body {
-  background: #071018 !important;
-}
-
-.page::before {
-  display: none !important;
-}
-
-.hero-cinematic {
-  background:
-    linear-gradient(90deg, rgba(5, 10, 16, 0.86) 0%, rgba(5, 10, 16, 0.56) 42%, rgba(5, 10, 16, 0.24) 72%, rgba(5, 10, 16, 0.48) 100%),
-    linear-gradient(180deg, rgba(5, 10, 16, 0.08) 0%, rgba(5, 10, 16, 0.14) 56%, rgba(7, 16, 24, 0.84) 100%),
-    url("/assets/fix24-cinematic-hero.png") center top / cover no-repeat !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.hero-cinematic::before {
-  background:
-    radial-gradient(circle at 34% 38%, rgba(229, 9, 20, 0.18), transparent 32%),
-    linear-gradient(180deg, transparent 76%, rgba(7, 16, 24, 0.72) 100%) !important;
-}
-
-.page::after {
-  background:
-    linear-gradient(180deg, rgba(7, 16, 24, 0.92) 0%, rgba(7, 16, 24, 0.96) 260px, #071018 100%) !important;
+  .hero-cinematic h1 {
+    font-size: clamp(46px, 14vw, 68px) !important;
+  }
 }

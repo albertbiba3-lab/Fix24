@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
+import heroBackground from "./assets/fix24-cinematic-hero.png";
 import { supabase } from "./supabaseClient";
 
 const categories = [
@@ -464,7 +465,10 @@ function App() {
 
   return (
     <div className="page">
-      <header className="hero hero-premium hero-cinematic">
+      <header
+        className="hero hero-premium hero-cinematic"
+        style={{ "--hero-background": `url(${heroBackground})` }}
+      >
         <nav className="nav cinematic-nav">
           <div className="brand cinematic-brand">
             <strong>
