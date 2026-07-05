@@ -3,7 +3,7 @@ import "./App.css";
 import heroBackground from "./assets/fix24-cinematic-hero.jpg";
 import { supabase } from "./supabaseClient";
 
-const TrustIcon = ({ name }) => {
+const UiIcon = ({ name }) => {
   const icons = {
     star: <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />,
     location: (
@@ -19,10 +19,22 @@ const TrustIcon = ({ name }) => {
         <path d="m9 12 2 2 4-4" />
       </>
     ),
+    building: (
+      <>
+        <rect x="4" y="2" width="16" height="20" rx="2" />
+        <path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01" />
+      </>
+    ),
+    briefcase: (
+      <>
+        <rect x="3" y="7" width="18" height="13" rx="2" />
+        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M12 11v2" />
+      </>
+    ),
   };
 
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="ui-icon" viewBox="0 0 24 24" aria-hidden="true">
       {icons[name]}
     </svg>
   );
@@ -580,10 +592,10 @@ function App() {
       </header>
 
       <section className="trust-strip" id="about">
-        <span className="trust-item"><TrustIcon name="star" />Profesionistë lokalë</span>
-        <span className="trust-item"><TrustIcon name="location" />Kërkim sipas qytetit</span>
-        <span className="trust-item"><TrustIcon name="phone" />Kontakt direkt</span>
-        <span className="trust-item"><TrustIcon name="verified" />Shërbime të verifikuara më vonë</span>
+        <span className="trust-item"><UiIcon name="star" />Profesionistë lokalë</span>
+        <span className="trust-item"><UiIcon name="location" />Kërkim sipas qytetit</span>
+        <span className="trust-item"><UiIcon name="phone" />Kontakt direkt</span>
+        <span className="trust-item"><UiIcon name="verified" />Shërbime të verifikuara më vonë</span>
       </section>
 
       <section className="process-section" id="steps">
@@ -720,7 +732,7 @@ function App() {
                 </div>
 
                 <div className="rating-line">
-  <span>⭐</span>
+  <UiIcon name="star" />
 
   <strong>
     {pro.reviews > 0
@@ -750,23 +762,23 @@ function App() {
 </div>
 
                 <div className="meta-row">
-                  <span>📍 {pro.city}</span>
+                  <span className="icon-text"><UiIcon name="location" />{pro.city}</span>
                   {pro.category && <b>{pro.category}</b>}
                 </div>
 
                 {pro.company_name && (
-                  <div className="company-line">🏢 {pro.company_name}</div>
+                  <div className="company-line icon-text"><UiIcon name="building" />{pro.company_name}</div>
                 )}
 
                 {pro.years_experience && (
-                  <div className="company-line">
-                    🧰 {pro.years_experience} vite eksperiencë
+                  <div className="company-line icon-text">
+                    <UiIcon name="briefcase" />{pro.years_experience} vite eksperiencë
                   </div>
                 )}
 
                 {pro.description && <p className="pro-desc">{pro.description}</p>}
 
-                <div className="phone-line">📞 {pro.phone}</div>
+                <div className="phone-line icon-text"><UiIcon name="phone" />{pro.phone}</div>
 
                 <div className="pro-actions">
                   <a
