@@ -31,6 +31,12 @@ const UiIcon = ({ name }) => {
         <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M12 11v2" />
       </>
     ),
+    message: (
+      <>
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" />
+        <path d="M8 9h8M8 13h5" />
+      </>
+    ),
   };
 
   return (
@@ -732,34 +738,21 @@ function App() {
                 </div>
 
                 <div className="rating-line">
-  <UiIcon name="star" />
+                  <div className="rating-summary">
+                    <UiIcon name="star" />
+                    <strong>
+                      {pro.reviews > 0
+                        ? `${pro.rating || 5}.0`
+                        : "I ri në Fix24"}
+                    </strong>
+                    {pro.reviews > 0 && <small>({pro.reviews} vlerësime)</small>}
+                  </div>
 
-  <strong>
-    {pro.reviews > 0
-      ? `${pro.rating || 5}.0`
-      : "I ri në Fix24"}
-  </strong>
-
-  {pro.reviews > 0 && (
-    <small>({pro.reviews} vlerësime)</small>
-  )}
-
-  {pro.verified && (
-    <span
-      className="verified-pill"
-    >
-      ✓ Verifikuar
-    </span>
-  )}
-
-  {pro.is_premium && (
-    <span
-      className="premium-pill"
-    >
-      PREMIUM
-    </span>
-  )}
-</div>
+                  <div className="status-badges">
+                    {pro.verified && <span className="verified-pill">✓ Verifikuar</span>}
+                    {pro.is_premium && <span className="premium-pill">Premium</span>}
+                  </div>
+                </div>
 
                 <div className="meta-row">
                   <span className="icon-text"><UiIcon name="location" />{pro.city}</span>
@@ -786,7 +779,7 @@ function App() {
                     className="call-btn"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    Telefono
+                    <UiIcon name="phone" />Telefono
                   </a>
 
                   <a
@@ -796,7 +789,7 @@ function App() {
                     className="whatsapp-btn"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    WhatsApp
+                    <UiIcon name="message" />WhatsApp
                   </a>
                 </div>
               </article>
