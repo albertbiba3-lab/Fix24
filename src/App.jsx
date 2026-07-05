@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import heroBackground from "./assets/fix24-cinematic-hero.png";
+import heroBackground from "./assets/fix24-cinematic-hero.jpg";
 import { supabase } from "./supabaseClient";
 
 const categories = [
