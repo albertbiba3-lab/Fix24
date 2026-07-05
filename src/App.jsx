@@ -561,23 +561,33 @@ function App() {
         <span>🛠️ Shërbime të verifikuara më vonë</span>
       </section>
 
-      <section className="steps" id="steps">
-        <div>
-          <span>01</span>
-          <strong>Kërko</strong>
-          <p>Zgjidh profesionin dhe qytetin.</p>
+      <section className="process-section" id="steps">
+        <div className="process-heading">
+          <div>
+            <span className="process-eyebrow">Si funksionon</span>
+            <h2>Gjej profesionistin në tre hapa.</h2>
+          </div>
+          <p>Kërko sipas shërbimit dhe qytetit, krahaso profilet dhe kontakto drejtpërdrejt.</p>
         </div>
 
-        <div>
-          <span>02</span>
-          <strong>Krahaso</strong>
-          <p>Shiko profilet dhe përshkrimin.</p>
-        </div>
+        <div className="steps">
+          <article className="step-card">
+            <span>01</span>
+            <strong>Kërko</strong>
+            <p>Zgjidh profesionin dhe qytetin.</p>
+          </article>
 
-        <div>
-          <span>03</span>
-          <strong>Kontakto</strong>
-          <p>Telefono ose shkruaj në WhatsApp.</p>
+          <article className="step-card">
+            <span>02</span>
+            <strong>Krahaso</strong>
+            <p>Shiko profilet dhe përshkrimin.</p>
+          </article>
+
+          <article className="step-card">
+            <span>03</span>
+            <strong>Kontakto</strong>
+            <p>Telefono ose shkruaj në WhatsApp.</p>
+          </article>
         </div>
       </section>
 
