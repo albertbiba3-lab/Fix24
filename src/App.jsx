@@ -605,7 +605,7 @@ function App() {
         </div>
       </header>
 
-      <section className="trust-strip" id="about">
+      <section className="trust-strip">
         <span className="trust-item"><UiIcon name="star" />Profesionistë lokalë</span>
         <span className="trust-item"><UiIcon name="location" />Kërkim sipas qytetit</span>
         <span className="trust-item"><UiIcon name="phone" />Kontakt direkt</span>
@@ -825,6 +825,50 @@ function App() {
           )}
         </div>
       </section>
+
+      <section className="about-section" id="about">
+        <div className="about-copy">
+          <span className="eyebrow">Rreth Fix24</span>
+          <h2>Një platformë lokale për shërbime më të shpejta dhe më të qarta.</h2>
+          <p>
+            Fix24 lidh klientët me profesionistë lokalë sipas qytetit dhe shërbimit.
+            Qëllimi është i thjeshtë: kërkim i shpejtë, kontakt direkt dhe profile të
+            paraqitura pastër për çdo profesionist.
+          </p>
+        </div>
+
+        <div className="about-grid">
+          <article>
+            <UiIcon name="location" />
+            <strong>Afër klientit</strong>
+            <span>Kërkim sipas qytetit për të gjetur shërbimin më pranë.</span>
+          </article>
+          <article>
+            <UiIcon name="phone" />
+            <strong>Kontakt direkt</strong>
+            <span>Telefon ose WhatsApp pa hapa të panevojshëm.</span>
+          </article>
+          <article>
+            <UiIcon name="verified" />
+            <strong>Profile të qarta</strong>
+            <span>Emër, profesion, qytet, përshkrim dhe foto në një vend.</span>
+          </article>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <div>
+          <strong className="footer-logo">Fix<span>24</span></strong>
+          <p>Platformë shqiptare për profesionistë lokalë dhe klientë që kërkojnë shërbim shpejt.</p>
+        </div>
+
+        <div className="footer-links">
+          <a href="#top">Kreu</a>
+          <a href="#steps">Si funksionon</a>
+          <a href="#professionals">Profesionistët</a>
+          <a href="#about">Rreth nesh</a>
+        </div>
+      </footer>
     </div>
   );
 }
