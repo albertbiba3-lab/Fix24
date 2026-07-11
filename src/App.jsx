@@ -342,60 +342,75 @@ function App() {
 
   if (showRegister) {
     return (
-      <div className="page">
+      <div className="page register-view">
         <div className="register-shell">
-          <button className="ghost-btn" onClick={() => setShowRegister(false)}>
-            ← Kthehu
+          <button className="ghost-btn register-back" onClick={() => setShowRegister(false)}>
+            Kthehu
           </button>
 
           <div className="register-card">
-            <span className="eyebrow">Fix24 Professional</span>
-
-            <h1>Regjistro profilin tënd profesional</h1>
-
-            <p>
-              Krijo një profil të pastër dhe profesional. Klientët mund të të
-              gjejnë sipas qytetit, profesionit dhe kategorisë.
-            </p>
-
-            <div className="upload-box">
-              <div className="upload-preview">
-                {formData.profile_image ? (
-                  <img src={formData.profile_image} alt="Profile preview" />
-                ) : (
-                  <span>
-                    {formData.name ? formData.name.charAt(0).toUpperCase() : "F24"}
-                  </span>
-                )}
-              </div>
-
-              <label className="upload-label">
-                {uploading ? "Duke ngarkuar..." : "Ngarko foto / logo"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => uploadImage(e, "profile_image")}
-                />
-              </label>
+            <div className="register-hero-copy">
+              <span className="eyebrow">Fix24 Professional</span>
+              <h1>Regjistro profilin tënd profesional</h1>
+              <p>
+                Krijo një profil të qartë për klientët: foto, qytet, profesion,
+                kontakt direkt dhe përshkrim të shkurtër të shërbimeve.
+              </p>
             </div>
 
-            <div className="upload-box">
-              <div className="upload-preview cover-small">
-                {formData.cover_image ? (
-                  <img src={formData.cover_image} alt="Cover preview" />
-                ) : (
-                  <span>Cover</span>
-                )}
+            <div className="register-upload-grid">
+              <div className="upload-box">
+                <div className="upload-preview">
+                  {formData.profile_image ? (
+                    <img src={formData.profile_image} alt="Profile preview" />
+                  ) : (
+                    <span>
+                      {formData.name ? formData.name.charAt(0).toUpperCase() : "F24"}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <strong>Foto profili ose logo</strong>
+                  <p>Shfaqet te karta dhe profili yt publik.</p>
+                  <label className="upload-label">
+                    {uploading ? "Duke ngarkuar..." : "Ngarko foto"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => uploadImage(e, "profile_image")}
+                    />
+                  </label>
+                </div>
               </div>
 
-              <label className="upload-label">
-                {uploading ? "Duke ngarkuar..." : "Ngarko cover image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => uploadImage(e, "cover_image")}
-                />
-              </label>
+              <div className="upload-box cover-upload-box">
+                <div className="upload-preview cover-small">
+                  {formData.cover_image ? (
+                    <img src={formData.cover_image} alt="Cover preview" />
+                  ) : (
+                    <span>Cover</span>
+                  )}
+                </div>
+
+                <div>
+                  <strong>Foto cover</strong>
+                  <p>Përdoret si sfond në faqen e profilit.</p>
+                  <label className="upload-label">
+                    {uploading ? "Duke ngarkuar..." : "Ngarko cover"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => uploadImage(e, "cover_image")}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="register-form-head">
+              <span>Të dhënat e profilit</span>
+              <small>Fushat kryesore: emri, profesioni, qyteti dhe telefoni.</small>
             </div>
 
             <div className="form-grid">
@@ -422,7 +437,7 @@ function App() {
               />
 
               <input
-                placeholder="Qyteti p.sh. Frankfurt"
+                placeholder="Qyteti p.sh. Tiranë"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               />
@@ -488,7 +503,7 @@ function App() {
                 <option value="">Zgjidh kategorinë</option>
                 {categories.map((cat) => (
                   <option key={cat.name} value={cat.name}>
-                    {cat.icon} {cat.name}
+                    {cat.name}
                   </option>
                 ))}
               </select>
@@ -507,7 +522,7 @@ function App() {
             </button>
 
             {submitted && (
-              <div className="success">✅ Regjistrimi u dërgua me sukses.</div>
+              <div className="success">Regjistrimi u dërgua me sukses.</div>
             )}
           </div>
         </div>
