@@ -150,8 +150,6 @@ function App() {
     });
   }, [professionals, searchProfession, searchCity]);
 
-  const featuredProfessional = professionals[0];
-
   const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
 
@@ -672,60 +670,6 @@ function App() {
         </div>
       </section>
 
-      {featuredProfessional && (
-        <section className="featured-section" id="contact">
-          <div className="featured-card">
-            <div className="featured-image">
-              {featuredProfessional.profile_image ? (
-                <img src={featuredProfessional.profile_image} alt={featuredProfessional.name} />
-              ) : (
-                <span>{featuredProfessional.name?.charAt(0)?.toUpperCase()}</span>
-              )}
-            </div>
-
-            <div className="featured-copy">
-              <span className="eyebrow">Profesionist i regjistruar</span>
-              <h2>{featuredProfessional.name}</h2>
-
-              <div className="featured-meta">
-                <span>
-                  <UiIcon name="briefcase" />
-                  {featuredProfessional.profession}
-                </span>
-                <span>
-                  <UiIcon name="location" />
-                  {featuredProfessional.city}
-                </span>
-                <span>
-                  <UiIcon name="verified" />
-                  Fix24
-                </span>
-              </div>
-
-              <p className="featured-desc">
-                {featuredProfessional.description || "Profil profesional në Fix24."}
-              </p>
-
-              <div className="featured-actions">
-                <a href={`tel:${featuredProfessional.phone}`} className="call-btn">
-                  <UiIcon name="phone" />
-                  Telefono
-                </a>
-
-                <a
-                  href={`https://wa.me/${getWhatsAppNumber(featuredProfessional)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="whatsapp-btn"
-                >
-                  <UiIcon name="message" />
-                  WhatsApp
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       <section className="section professionals-section" id="professionals">
         <div className="section-heading">
@@ -856,7 +800,7 @@ function App() {
         </div>
       </section>
 
-      <footer className="site-footer">
+      <footer className="site-footer" id="contact">
         <div>
           <strong className="footer-logo">Fix<span>24</span></strong>
           <p>Platformë shqiptare për profesionistë lokalë dhe klientë që kërkojnë shërbim shpejt.</p>
