@@ -227,9 +227,9 @@ function App() {
 
   if (selectedPro) {
     return (
-      <div className="page">
-        <button className="ghost-btn" onClick={() => setSelectedPro(null)}>
-          ← Kthehu te lista
+      <div className="page profile-view">
+        <button className="ghost-btn profile-back" onClick={() => setSelectedPro(null)}>
+          Kthehu te lista
         </button>
 
         <section className="profile-page">
@@ -251,29 +251,27 @@ function App() {
             </div>
 
             <div className="profile-info">
-              <span className="eyebrow">
-                {selectedPro.verified ? "✓ I verifikuar" : "Profesionist Fix24"}
-              </span>
-{selectedPro.is_premium && (
-  <span className="premium-badge">
-    PREMIUM
-  </span>
-)}
-              <h1>{selectedPro.name}</h1>
+              <div className="profile-badges">
+                <span className="eyebrow">
+                  {selectedPro.verified ? "I verifikuar" : "Profesionist Fix24"}
+                </span>
+                {selectedPro.is_premium && <span className="premium-badge">Premium</span>}
+              </div>
 
+              <h1>{selectedPro.name}</h1>
               {selectedPro.company_name && <h3>{selectedPro.company_name}</h3>}
 
-              <p>
+              <p className="profile-subtitle">
                 {selectedPro.profession} në {selectedPro.city}
               </p>
 
               <div className="profile-tags">
-                {selectedPro.category && <span>{selectedPro.category}</span>}
+                {selectedPro.category && <span><UiIcon name="briefcase" />{selectedPro.category}</span>}
                 {selectedPro.years_experience && (
-                  <span>{selectedPro.years_experience} vite eksperiencë</span>
+                  <span><UiIcon name="verified" />{selectedPro.years_experience} vite eksperiencë</span>
                 )}
                 <span>
-                  ⭐{" "}
+                  <UiIcon name="star" />
                   {selectedPro.reviews > 0
                     ? `${selectedPro.rating || 5}.0`
                     : "I ri në Fix24"}
@@ -284,16 +282,18 @@ function App() {
 
           <div className="profile-layout">
             <div className="profile-about">
+              <span className="eyebrow">Profili</span>
               <h2>Rreth profesionistit</h2>
               <p>
                 {selectedPro.description ||
                   "Ky profesionist është regjistruar në Fix24 dhe mund të kontaktohet direkt për shërbime."}
               </p>
 
-              <h2>Kontakt</h2>
-              <p>📍 {selectedPro.city}</p>
-              <p>📞 {selectedPro.phone}</p>
-              {selectedPro.email && <p>✉️ {selectedPro.email}</p>}
+              <div className="profile-contact-list">
+                <div className="profile-contact-line"><UiIcon name="location" />{selectedPro.city}</div>
+                <div className="profile-contact-line"><UiIcon name="phone" />{selectedPro.phone}</div>
+                {selectedPro.email && <div className="profile-contact-line">{selectedPro.email}</div>}
+              </div>
 
               <div className="social-links">
                 {selectedPro.website && (
@@ -315,10 +315,12 @@ function App() {
             </div>
 
             <div className="profile-contact-card">
-              <h3>Kontakto direkt</h3>
-              <p>Zgjidh mënyrën më të shpejtë për të folur me profesionistin.</p>
+              <span className="eyebrow">Kontakt</span>
+              <h3>Fol direkt me profesionistin</h3>
+              <p>Zgjidh mënyrën më të shpejtë për të kërkuar shërbimin.</p>
 
               <a href={`tel:${selectedPro.phone}`} className="call-btn">
+                <UiIcon name="phone" />
                 Telefono
               </a>
 
@@ -328,6 +330,7 @@ function App() {
                 rel="noreferrer"
                 className="whatsapp-btn"
               >
+                <UiIcon name="message" />
                 WhatsApp
               </a>
             </div>
