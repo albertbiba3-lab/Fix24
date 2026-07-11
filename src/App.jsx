@@ -683,18 +683,32 @@ function App() {
               )}
             </div>
 
-            <div>
+            <div className="featured-copy">
               <span className="eyebrow">Profesionist i regjistruar</span>
               <h2>{featuredProfessional.name}</h2>
-              <p>
-                {featuredProfessional.profession} në {featuredProfessional.city}
-              </p>
+
+              <div className="featured-meta">
+                <span>
+                  <UiIcon name="briefcase" />
+                  {featuredProfessional.profession}
+                </span>
+                <span>
+                  <UiIcon name="location" />
+                  {featuredProfessional.city}
+                </span>
+                <span>
+                  <UiIcon name="verified" />
+                  Fix24
+                </span>
+              </div>
+
               <p className="featured-desc">
                 {featuredProfessional.description || "Profil profesional në Fix24."}
               </p>
 
               <div className="featured-actions">
                 <a href={`tel:${featuredProfessional.phone}`} className="call-btn">
+                  <UiIcon name="phone" />
                   Telefono
                 </a>
 
@@ -704,6 +718,7 @@ function App() {
                   rel="noreferrer"
                   className="whatsapp-btn"
                 >
+                  <UiIcon name="message" />
                   WhatsApp
                 </a>
               </div>
