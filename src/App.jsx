@@ -642,10 +642,10 @@ function App() {
       </header>
 
       <section className="trust-strip">
-        <span className="trust-item"><UiIcon name="star" />Profesionistë lokalë</span>
-        <span className="trust-item"><UiIcon name="location" />Kërkim sipas qytetit</span>
-        <span className="trust-item"><UiIcon name="phone" />Kontakt direkt</span>
-        <span className="trust-item"><UiIcon name="verified" />Shërbime të verifikuara më vonë</span>
+        <span className="trust-item"><span className="trust-icon"><UiIcon name="star" /></span>Profesionistë lokalë</span>
+        <span className="trust-item"><span className="trust-icon"><UiIcon name="location" /></span>Kërkim sipas qytetit</span>
+        <span className="trust-item"><span className="trust-icon"><UiIcon name="phone" /></span>Kontakt direkt</span>
+        <span className="trust-item"><span className="trust-icon"><UiIcon name="verified" /></span>Shërbime të verifikuara më vonë</span>
       </section>
 
       <section className="process-section" id="steps">
@@ -659,19 +659,22 @@ function App() {
 
         <div className="steps">
           <article className="step-card">
-            <span>01</span>
+            <span className="step-number">01</span>
+            <span className="step-icon"><UiIcon name="briefcase" /></span>
             <strong>Kërko</strong>
             <p>Zgjidh profesionin dhe qytetin.</p>
           </article>
 
           <article className="step-card">
-            <span>02</span>
+            <span className="step-number">02</span>
+            <span className="step-icon"><UiIcon name="star" /></span>
             <strong>Krahaso</strong>
             <p>Shiko profilet dhe përshkrimin.</p>
           </article>
 
           <article className="step-card">
-            <span>03</span>
+            <span className="step-number">03</span>
+            <span className="step-icon"><UiIcon name="message" /></span>
             <strong>Kontakto</strong>
             <p>Telefono ose shkruaj në WhatsApp.</p>
           </article>
