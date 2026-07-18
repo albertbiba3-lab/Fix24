@@ -533,6 +533,7 @@ function App() {
   return (
     <div className="page">
       <header
+        id="top"
         className="hero hero-premium hero-cinematic"
         style={{ "--hero-background": `url(${heroBackground})` }}
       >
