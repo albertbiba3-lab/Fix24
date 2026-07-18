@@ -324,6 +324,30 @@ select {
   border-radius: 0;
 }
 
+.clear-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 40px;
+  margin-top: 14px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.075);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.clear-search:hover {
+  border-color: rgba(239, 35, 60, 0.48);
+  background: rgba(239, 35, 60, 0.12);
+  color: var(--text);
+}
+
 .cinematic-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -500,6 +524,22 @@ select {
   color: var(--text);
   text-align: left;
   cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.category-card:hover,
+.category-card.active {
+  transform: translateY(-4px);
+  border-color: rgba(239, 35, 60, 0.52);
+  box-shadow: 0 24px 54px rgba(239, 35, 60, 0.16);
+}
+
+.category-card.active .category-icon-wrap {
+  background: var(--text);
+}
+
+.category-card.active .category-icon {
+  fill: var(--red);
 }
 
 .category-media {
@@ -559,6 +599,54 @@ select {
 }
 
 /* Professionals */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: -8px 0 24px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.filter-bar div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-bar span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(239, 35, 60, 0.30);
+  border-radius: 999px;
+  background: rgba(239, 35, 60, 0.12);
+  color: rgba(255, 255, 255, 0.90);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.filter-bar button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.empty-state .ghost-btn {
+  width: fit-content;
+  margin-top: 16px;
+  box-shadow: none;
+}
+
 .pro-grid {
   grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
   gap: 22px;
@@ -1264,6 +1352,10 @@ select {
     border-radius: 0;
   }
 
+  .clear-search {
+    width: 100%;
+  }
+
   .cinematic-stats div {
     min-height: 76px;
     padding: 16px;
@@ -1300,6 +1392,15 @@ select {
   .category-grid,
   .pro-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filter-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .filter-bar button {
+    width: 100%;
   }
 
   .pro-card {

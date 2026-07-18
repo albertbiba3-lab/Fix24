@@ -150,6 +150,17 @@ function App() {
     });
   }, [professionals, searchProfession, searchCity]);
 
+  const hasActiveFilters = Boolean(searchProfession.trim() || searchCity.trim());
+
+  const clearFilters = () => {
+    setSearchProfession("");
+    setSearchCity("");
+  };
+
+  const showResults = () => {
+    document.getElementById("professionals")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
 
@@ -596,8 +607,16 @@ function App() {
                 />
               </label>
 
-              <button className="main-btn">Kërko</button>
+              <button className="main-btn" type="button" onClick={showResults}>
+                Kërko
+              </button>
             </div>
+
+            {hasActiveFilters && (
+              <button className="clear-search" type="button" onClick={clearFilters}>
+                Pastro filtrat
+              </button>
+            )}
 
             <div className="hero-stats cinematic-stats">
               <div>
@@ -673,8 +692,12 @@ function App() {
           {categories.map((cat) => (
             <button
               key={cat.name}
-              className="category-card"
-              onClick={() => setSearchProfession(cat.name)}
+              className={`category-card ${searchProfession === cat.name ? "active" : ""}`}
+              type="button"
+              onClick={() => {
+                setSearchProfession(cat.name);
+                showResults();
+              }}
             >
               <span className="category-media">
                 <img src={cat.image} alt="" />
@@ -700,11 +723,28 @@ function App() {
           <span>{filteredProfessionals.length} rezultat/e</span>
         </div>
 
+        {hasActiveFilters && (
+          <div className="filter-bar">
+            <div>
+              {searchProfession.trim() && <span>Shërbimi: {searchProfession}</span>}
+              {searchCity.trim() && <span>Qyteti: {searchCity}</span>}
+            </div>
+            <button type="button" onClick={clearFilters}>
+              Pastro
+            </button>
+          </div>
+        )}
+
         <div className="pro-grid">
           {filteredProfessionals.length === 0 ? (
             <div className="empty-state">
               <h3>Nuk u gjet asnjë profesionist</h3>
               <p>Provo një profesion ose qytet tjetër.</p>
+              {hasActiveFilters && (
+                <button className="ghost-btn" type="button" onClick={clearFilters}>
+                  Pastro filtrat
+                </button>
+              )}
             </div>
           ) : (
             filteredProfessionals.map((pro) => (
