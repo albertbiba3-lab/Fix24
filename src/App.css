@@ -4252,3 +4252,205 @@ body {
     width: 100%;
   }
 }
+
+/* Final mobile polish */
+@media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .hero-cinematic {
+    width: 100% !important;
+    padding: 14px 14px 34px !important;
+    background-position: 38% top !important;
+  }
+
+  .hero-cinematic .cinematic-nav {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    margin-bottom: 38px !important;
+  }
+
+  .hero-cinematic .cinematic-brand {
+    width: fit-content;
+  }
+
+  .hero-cinematic .nav-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .hero-cinematic .nav-login,
+  .hero-cinematic .nav-action {
+    width: 100%;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+  }
+
+  .hero-cinematic h1 {
+    max-width: 100% !important;
+    margin-top: 14px !important;
+    font-size: clamp(42px, 13.5vw, 60px) !important;
+    line-height: 0.98 !important;
+  }
+
+  .hero-cinematic .hero-left p {
+    max-width: 100% !important;
+    font-size: 16px !important;
+  }
+
+  .hero-cinematic .cinematic-search,
+  .hero-cinematic .cinematic-stats {
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .hero-cinematic .cinematic-search label {
+    min-height: 60px !important;
+    padding: 10px 14px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .hero-cinematic .cinematic-search label:last-of-type {
+    border-bottom: 0 !important;
+  }
+
+  .hero-cinematic .main-btn {
+    width: 100%;
+    min-height: 58px !important;
+    border-radius: 0 !important;
+  }
+
+  .hero-cinematic .cinematic-stats div {
+    min-height: 76px;
+    padding: 16px !important;
+    border-right: 0 !important;
+  }
+
+  .trust-strip,
+  .process-section,
+  .section,
+  .about-section,
+  .site-footer {
+    width: min(100% - 24px, 1240px) !important;
+  }
+
+  .section-heading h2,
+  .process-heading h2,
+  .about-copy h2,
+  .professionals-section .section-heading h2 {
+    font-size: clamp(32px, 10vw, 42px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .trust-strip {
+    justify-content: flex-start !important;
+  }
+
+  .trust-item {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-card {
+    min-height: 220px;
+  }
+
+  .professionals-section .pro-card {
+    min-height: auto !important;
+    padding: 18px !important;
+  }
+
+  .professionals-section .rating-line,
+  .professionals-section .meta-row {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .profile-view,
+  .register-view {
+    width: min(100% - 20px, 1180px) !important;
+    padding-top: 12px !important;
+  }
+
+  .profile-page,
+  .register-card,
+  .about-section {
+    border-radius: 8px !important;
+  }
+
+  .profile-cover {
+    height: 190px !important;
+  }
+
+  .profile-main,
+  .profile-layout {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .profile-info h1 {
+    font-size: clamp(36px, 11vw, 48px) !important;
+  }
+
+  .profile-contact-line,
+  .profile-tags span {
+    overflow-wrap: anywhere;
+  }
+
+  .register-card {
+    padding: 20px !important;
+  }
+
+  .register-card h1 {
+    font-size: clamp(36px, 11vw, 48px) !important;
+  }
+
+  .register-card input,
+  .register-card textarea,
+  .register-card select {
+    min-height: 52px;
+    font-size: 15px !important;
+  }
+
+  .site-footer {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-cinematic {
+    padding-inline: 12px !important;
+  }
+
+  .hero-cinematic .cinematic-brand strong {
+    font-size: 27px !important;
+  }
+
+  .hero-cinematic .nav-login,
+  .hero-cinematic .nav-action {
+    font-size: 13px !important;
+  }
+
+  .professionals-section .pro-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .profile-photo {
+    width: 104px !important;
+    height: 104px !important;
+  }
+
+  .register-card .upload-preview {
+    width: 74px;
+    height: 74px;
+  }
+}
