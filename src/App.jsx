@@ -360,13 +360,32 @@ function App() {
           </button>
 
           <div className="register-card">
-            <div className="register-hero-copy">
-              <span className="eyebrow">Fix24 Professional</span>
-              <h1>Regjistro profilin tënd profesional</h1>
-              <p>
-                Krijo një profil të qartë për klientët: foto, qytet, profesion,
-                kontakt direkt dhe përshkrim të shkurtër të shërbimeve.
-              </p>
+            <div className="register-top">
+              <div className="register-hero-copy">
+                <span className="eyebrow">Fix24 Professional</span>
+                <h1>Regjistro profilin tënd profesional</h1>
+                <p>
+                  Krijo një profil të qartë për klientët: foto, qytet, profesion,
+                  kontakt direkt dhe përshkrim të shkurtër të shërbimeve.
+                </p>
+              </div>
+
+              <aside className="register-preview-card" aria-label="Pamje e profilit">
+                <span className="preview-badge">Preview publik</span>
+                <div className="preview-avatar">
+                  {formData.profile_image ? (
+                    <img src={formData.profile_image} alt="" />
+                  ) : (
+                    <span>{formData.name ? formData.name.charAt(0).toUpperCase() : "F24"}</span>
+                  )}
+                </div>
+                <strong>{formData.name || "Emri yt"}</strong>
+                <p>{formData.profession || "Profesioni"} {formData.city ? `në ${formData.city}` : ""}</p>
+                <div className="preview-pills">
+                  <span><UiIcon name="verified" />Fix24</span>
+                  <span><UiIcon name="phone" />Kontakt direkt</span>
+                </div>
+              </aside>
             </div>
 
             <div className="register-upload-grid">
