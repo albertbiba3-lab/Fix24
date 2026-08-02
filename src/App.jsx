@@ -93,14 +93,37 @@ const categories = [
   },
 ];
 
+const initialRequestData = {
+  category: "",
+  title: "",
+  description: "",
+  city: "",
+  area: "",
+  preferred_date: "",
+  preferred_time: "",
+  urgency: "normal",
+  budget_min: "",
+  budget_max: "",
+  pricing_preference: "on_site_check",
+  client_phone: "",
+  address_details: "",
+};
+
 function App() {
   const [showRegister, setShowRegister] = useState(false);
+  const [showRequestForm, setShowRequestForm] = useState(false);
   const [selectedPro, setSelectedPro] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [professionals, setProfessionals] = useState([]);
   const [searchProfession, setSearchProfession] = useState("");
   const [searchCity, setSearchCity] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [requestForm, setRequestForm] = useState(initialRequestData);
+  const [requestFiles, setRequestFiles] = useState([]);
+  const [myRequests, setMyRequests] = useState([]);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -136,7 +159,47 @@ function App() {
 
   useEffect(() => {
     fetchProfessionals();
+
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user || null);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setCurrentUser(session?.user || null);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
+
+  const fetchMyRequests = async () => {
+    if (!currentUser) {
+      setMyRequests([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("service_requests")
+      .select("*, service_request_photos(*)")
+      .eq("client_id", currentUser.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setMyRequests(data || []);
+  };
+
+  useEffect(() => {
+    if (showRequestForm) {
+      fetchMyRequests();
+    }
+  }, [showRequestForm, currentUser]);
 
   const filteredProfessionals = useMemo(() => {
     return professionals.filter((pro) => {
@@ -163,6 +226,95 @@ function App() {
 
   const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
+
+  const saveServiceRequest = async () => {
+    setRequestMessage("");
+
+    if (!currentUser) {
+      setRequestMessage(
+        "Për të publikuar kërkesë në mënyrë të sigurt duhet login. Faza tjetër është aktivizimi i hyrjes për klientët."
+      );
+      return;
+    }
+
+    if (
+      !requestForm.category.trim() ||
+      !requestForm.title.trim() ||
+      !requestForm.description.trim() ||
+      !requestForm.city.trim()
+    ) {
+      setRequestMessage("Plotëso kategorinë, titullin, përshkrimin dhe qytetin.");
+      return;
+    }
+
+    setRequestSubmitting(true);
+
+    const payload = {
+      ...requestForm,
+      client_id: currentUser.id,
+      status: "open",
+      budget_min: requestForm.budget_min ? Number(requestForm.budget_min) : null,
+      budget_max: requestForm.budget_max ? Number(requestForm.budget_max) : null,
+      preferred_date: requestForm.preferred_date || null,
+      preferred_time: requestForm.preferred_time || null,
+    };
+
+    const { data: request, error } = await supabase
+      .from("service_requests")
+      .insert([payload])
+      .select()
+      .single();
+
+    if (error) {
+      setRequestMessage(error.message);
+      setRequestSubmitting(false);
+      return;
+    }
+
+    if (requestFiles.length > 0) {
+      const photoRows = [];
+
+      for (const file of requestFiles) {
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${request.id}/${Date.now()}-${Math.random()
+          .toString(36)
+          .slice(2)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("request-photos")
+          .upload(fileName, file);
+
+        if (uploadError) {
+          setRequestMessage(uploadError.message);
+          setRequestSubmitting(false);
+          return;
+        }
+
+        photoRows.push({
+          request_id: request.id,
+          storage_path: fileName,
+        });
+      }
+
+      if (photoRows.length > 0) {
+        const { error: photosError } = await supabase
+          .from("service_request_photos")
+          .insert(photoRows);
+
+        if (photosError) {
+          setRequestMessage(photosError.message);
+          setRequestSubmitting(false);
+          return;
+        }
+      }
+    }
+
+    setRequestForm(initialRequestData);
+    setRequestFiles([]);
+    setRequestMessage("Kërkesa u publikua me sukses.");
+    setRequestSubmitting(false);
+    fetchMyRequests();
+  };
 
   const uploadImage = async (event, fieldName) => {
     const file = event.target.files?.[0];
@@ -370,6 +522,215 @@ function App() {
             </div>
           </div>
         </section>
+      </div>
+    );
+  }
+
+  if (showRequestForm) {
+    return (
+      <div className="page register-view request-view">
+        <div className="register-shell">
+          <button className="ghost-btn register-back" onClick={() => setShowRequestForm(false)}>
+            Kthehu
+          </button>
+
+          <div className="register-card request-card">
+            <div className="register-top">
+              <div className="register-hero-copy">
+                <span className="eyebrow">Kërkesë shërbimi</span>
+                <h1>Publiko çfarë të duhet.</h1>
+                <p>
+                  Klienti përshkruan punën, qytetin, urgjencën dhe buxhetin. Në fazën tjetër,
+                  kjo kërkesë do t'u shfaqet vetëm profesionistëve të përshtatshëm.
+                </p>
+              </div>
+
+              <aside className="request-status-card">
+                <span className="preview-badge">Faza 1</span>
+                <strong>Rrjedha e kërkesës</strong>
+                <p>open → quoted → booked → completed</p>
+                <div className="preview-pills">
+                  <span><UiIcon name="verified" />RLS</span>
+                  <span><UiIcon name="briefcase" />Oferta më vonë</span>
+                </div>
+              </aside>
+            </div>
+
+            {!currentUser && (
+              <div className="request-auth-note">
+                Për publikim të sigurt duhet një klient i loguar. Struktura është gati;
+                pas kësaj faze aktivizojmë hyrjen/rolet.
+              </div>
+            )}
+
+            <div className="register-form-head">
+              <span>Detajet e kërkesës</span>
+              <small>Kategoria, qyteti dhe përshkrimi janë të detyrueshme.</small>
+            </div>
+
+            <div className="form-grid">
+              <select
+                value={requestForm.category}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, category: e.target.value })
+                }
+              >
+                <option value="">Zgjidh kategorinë</option>
+                {categories.map((cat) => (
+                  <option key={cat.name} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                placeholder="Titulli p.sh. Kam defekt elektrik"
+                value={requestForm.title}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, title: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Qyteti p.sh. Tiranë"
+                value={requestForm.city}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, city: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Zona p.sh. Astir"
+                value={requestForm.area}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, area: e.target.value })
+                }
+              />
+
+              <input
+                type="date"
+                value={requestForm.preferred_date}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, preferred_date: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Orari p.sh. 10:00-14:00"
+                value={requestForm.preferred_time}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, preferred_time: e.target.value })
+                }
+              />
+
+              <select
+                value={requestForm.urgency}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, urgency: e.target.value })
+                }
+              >
+                <option value="normal">Normale</option>
+                <option value="urgent">Urgjente</option>
+                <option value="emergency">Emergjencë</option>
+              </select>
+
+              <select
+                value={requestForm.pricing_preference}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, pricing_preference: e.target.value })
+                }
+              >
+                <option value="on_site_check">Kontroll në vend</option>
+                <option value="fixed_price">Çmim fiks</option>
+              </select>
+
+              <input
+                type="number"
+                min="0"
+                placeholder="Buxheti minimal"
+                value={requestForm.budget_min}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, budget_min: e.target.value })
+                }
+              />
+
+              <input
+                type="number"
+                min="0"
+                placeholder="Buxheti maksimal"
+                value={requestForm.budget_max}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, budget_max: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Telefoni i klientit"
+                value={requestForm.client_phone}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, client_phone: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="Adresa ose detaje private"
+                value={requestForm.address_details}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, address_details: e.target.value })
+                }
+              />
+
+              <textarea
+                placeholder="Përshkruaj punën që duhet kryer"
+                value={requestForm.description}
+                onChange={(e) =>
+                  setRequestForm({ ...requestForm, description: e.target.value })
+                }
+              />
+
+              <label className="request-file-input">
+                Foto opsionale
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => setRequestFiles(Array.from(e.target.files || []))}
+                />
+                <span>{requestFiles.length} foto të zgjedhura</span>
+              </label>
+            </div>
+
+            <button className="main-btn full" onClick={saveServiceRequest} disabled={requestSubmitting}>
+              {requestSubmitting ? "Duke publikuar..." : "Publiko kërkesën"}
+            </button>
+
+            {requestMessage && <div className="success request-message">{requestMessage}</div>}
+
+            <div className="my-requests">
+              <div className="register-form-head">
+                <span>Kërkesat e mia</span>
+                <small>Shfaqen vetëm për klientin e loguar.</small>
+              </div>
+
+              {myRequests.length === 0 ? (
+                <div className="empty-state">
+                  <h3>Nuk ka ende kërkesa</h3>
+                  <p>Publiko kërkesën e parë pasi të jetë aktivizuar login-i.</p>
+                </div>
+              ) : (
+                <div className="request-list">
+                  {myRequests.map((request) => (
+                    <article className="request-list-card" key={request.id}>
+                      <span>{request.status}</span>
+                      <strong>{request.title}</strong>
+                      <p>{request.category} në {request.city}{request.area ? `, ${request.area}` : ""}</p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -608,6 +969,9 @@ function App() {
           <div className="nav-actions">
             <button className="nav-login" type="button">
               Hyr
+            </button>
+            <button className="nav-login" type="button" onClick={() => setShowRequestForm(true)}>
+              Kërkesë
             </button>
             <button className="nav-action" onClick={() => setShowRegister(true)}>
               Regjistrohu
