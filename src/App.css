@@ -1011,9 +1011,10 @@ select {
 
 .profile-cover {
   position: relative;
-  height: 260px;
+  height: 300px;
   background:
-    linear-gradient(90deg, rgba(5, 10, 16, 0.70), rgba(5, 10, 16, 0.20)),
+    radial-gradient(circle at 18% 22%, rgba(239, 35, 60, 0.34), transparent 32%),
+    linear-gradient(90deg, rgba(5, 10, 16, 0.82), rgba(5, 10, 16, 0.18)),
     var(--hero-background) center 35% / cover no-repeat;
 }
 
@@ -1021,8 +1022,18 @@ select {
   content: "";
   position: absolute;
   inset: auto 0 0;
-  height: 120px;
-  background: linear-gradient(180deg, transparent, var(--panel));
+  height: 170px;
+  background: linear-gradient(180deg, transparent, rgba(14, 23, 31, 0.72) 48%, var(--panel));
+}
+
+.profile-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(239, 35, 60, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.34));
+  pointer-events: none;
 }
 
 .profile-cover img {
@@ -1038,7 +1049,7 @@ select {
   height: 100%;
   align-items: center;
   padding-left: 36px;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.92);
   font-size: clamp(28px, 5vw, 54px);
   font-weight: 950;
 }
@@ -1049,17 +1060,17 @@ select {
   display: flex;
   align-items: flex-end;
   gap: 24px;
-  padding: 0 34px 30px;
-  margin-top: -76px;
+  padding: 0 34px 28px;
+  margin-top: -92px;
 }
 
 .profile-photo {
-  width: 150px;
-  height: 150px;
+  width: 164px;
+  height: 164px;
   flex: 0 0 auto;
   border: 3px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 8px rgba(14, 23, 31, 0.60);
 }
 
 .profile-badges,
@@ -1075,10 +1086,10 @@ select {
   min-height: 32px;
   align-items: center;
   padding: 0 12px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(239, 35, 60, 0.34);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
+  background: rgba(239, 35, 60, 0.16);
+  color: #ffb0b8;
   font-size: 12px;
   font-weight: 950;
 }
@@ -1096,6 +1107,11 @@ select {
   color: var(--muted);
 }
 
+.profile-subtitle {
+  font-size: 18px;
+  font-weight: 850;
+}
+
 .profile-tags {
   margin-top: 18px;
 }
@@ -1107,19 +1123,57 @@ select {
   height: 17px;
 }
 
+.profile-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 690px;
+  margin-top: 20px;
+}
+
+.profile-highlights span {
+  display: grid;
+  gap: 5px;
+  min-height: 76px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.028)),
+    rgba(7, 16, 24, 0.60);
+}
+
+.profile-highlights small,
+.profile-phone-preview small {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.profile-highlights strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .profile-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 22px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
   padding: 0 34px 34px;
 }
 
 .profile-about,
 .profile-contact-card {
-  padding: 26px;
+  padding: 28px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.055);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+    rgba(7, 16, 24, 0.72);
 }
 
 .profile-about h2,
@@ -1145,23 +1199,64 @@ select {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 48px;
+  padding: 0 15px;
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.055);
   overflow-wrap: anywhere;
+  font-weight: 850;
 }
 
 .profile-contact-card {
   position: sticky;
   top: 20px;
   height: fit-content;
+  border-color: rgba(239, 35, 60, 0.20);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(239, 35, 60, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.028)),
+    rgba(7, 16, 24, 0.82);
+  box-shadow: 0 26px 64px rgba(0, 0, 0, 0.30);
+}
+
+.profile-phone-preview {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 72px;
+  margin: 22px 0 18px;
+  padding: 14px;
+  border: 1px solid rgba(239, 35, 60, 0.24);
+  border-radius: 8px;
+  background: rgba(239, 35, 60, 0.10);
+}
+
+.profile-phone-preview > .ui-icon {
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(239, 35, 60, 0.18);
+  color: #ff5366;
+}
+
+.profile-phone-preview span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.profile-phone-preview strong {
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: 18px;
 }
 
 .profile-contact-card .call-btn,
 .profile-contact-card .whatsapp-btn {
   width: 100%;
+  min-height: 54px;
   margin-top: 12px;
 }
 
@@ -1465,6 +1560,10 @@ select {
     height: 210px;
   }
 
+  .profile-highlights {
+    grid-template-columns: 1fr;
+  }
+
   .profile-main {
     align-items: flex-start;
     padding: 0 22px 26px;
@@ -1616,6 +1715,10 @@ select {
     height: 190px;
   }
 
+  .profile-page {
+    margin-top: 12px;
+  }
+
   .profile-main,
   .profile-layout {
     padding-left: 18px;
@@ -1629,6 +1732,15 @@ select {
 
   .profile-info h1 {
     font-size: clamp(36px, 11vw, 48px);
+  }
+
+  .profile-highlights {
+    width: 100%;
+  }
+
+  .profile-about,
+  .profile-contact-card {
+    padding: 20px;
   }
 
   .profile-contact-line,

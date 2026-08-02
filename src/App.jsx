@@ -288,6 +288,21 @@ function App() {
                     : "I ri në Fix24"}
                 </span>
               </div>
+
+              <div className="profile-highlights">
+                <span>
+                  <small>Qyteti</small>
+                  <strong>{selectedPro.city}</strong>
+                </span>
+                <span>
+                  <small>Shërbimi</small>
+                  <strong>{selectedPro.profession}</strong>
+                </span>
+                <span>
+                  <small>Kontakt</small>
+                  <strong>Direkt</strong>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -329,6 +344,14 @@ function App() {
               <span className="eyebrow">Kontakt</span>
               <h3>Fol direkt me profesionistin</h3>
               <p>Zgjidh mënyrën më të shpejtë për të kërkuar shërbimin.</p>
+
+              <div className="profile-phone-preview">
+                <UiIcon name="phone" />
+                <span>
+                  <small>Numri i kontaktit</small>
+                  <strong>{selectedPro.phone}</strong>
+                </span>
+              </div>
 
               <a href={`tel:${selectedPro.phone}`} className="call-btn">
                 <UiIcon name="phone" />
