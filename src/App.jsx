@@ -112,6 +112,8 @@ const initialRequestData = {
 function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState("signin");
   const [selectedPro, setSelectedPro] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [professionals, setProfessionals] = useState([]);
@@ -124,6 +126,16 @@ function App() {
   const [myRequests, setMyRequests] = useState([]);
   const [requestMessage, setRequestMessage] = useState("");
   const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authMessage, setAuthMessage] = useState("");
+  const [authForm, setAuthForm] = useState({
+    full_name: "",
+    email: "",
+    password: "",
+    phone: "",
+    role: "client",
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -157,16 +169,41 @@ function App() {
     setProfessionals(data || []);
   };
 
+  const fetchUserProfile = async (userId) => {
+    if (!userId) {
+      setUserProfile(null);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error(error);
+      setUserProfile(null);
+      return;
+    }
+
+    setUserProfile(data || null);
+  };
+
   useEffect(() => {
     fetchProfessionals();
 
     supabase.auth.getUser().then(({ data }) => {
-      setCurrentUser(data.user || null);
+      const user = data.user || null;
+      setCurrentUser(user);
+      fetchUserProfile(user?.id);
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setCurrentUser(session?.user || null);
+        const user = session?.user || null;
+        setCurrentUser(user);
+        fetchUserProfile(user?.id);
       }
     );
 
@@ -227,12 +264,77 @@ function App() {
   const cleanPhone = (phone) => phone?.replace(/\D/g, "") || "";
   const getWhatsAppNumber = (pro) => cleanPhone(pro.whatsapp || pro.phone);
 
+  const handleAuthSubmit = async () => {
+    setAuthMessage("");
+
+    if (!authForm.email.trim() || !authForm.password.trim()) {
+      setAuthMessage("Plotëso email dhe password.");
+      return;
+    }
+
+    setAuthLoading(true);
+
+    if (authMode === "signup") {
+      const { data, error } = await supabase.auth.signUp({
+        email: authForm.email.trim(),
+        password: authForm.password,
+        options: {
+          data: {
+            full_name: authForm.full_name.trim(),
+            phone: authForm.phone.trim(),
+            role: authForm.role,
+          },
+        },
+      });
+
+      if (error) {
+        setAuthMessage(error.message);
+        setAuthLoading(false);
+        return;
+      }
+
+      if (data.user) {
+        await supabase.from("user_profiles").upsert({
+          id: data.user.id,
+          role: authForm.role,
+          full_name: authForm.full_name.trim() || null,
+          phone: authForm.phone.trim() || null,
+        });
+      }
+
+      setAuthMessage("Llogaria u krijua. Nëse Supabase kërkon konfirmim email-i, kontrollo inbox-in.");
+      setAuthLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: authForm.email.trim(),
+      password: authForm.password,
+    });
+
+    if (error) {
+      setAuthMessage(error.message);
+      setAuthLoading(false);
+      return;
+    }
+
+    setAuthLoading(false);
+    setShowAuth(false);
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setCurrentUser(null);
+    setUserProfile(null);
+    setMyRequests([]);
+  };
+
   const saveServiceRequest = async () => {
     setRequestMessage("");
 
     if (!currentUser) {
       setRequestMessage(
-        "Për të publikuar kërkesë në mënyrë të sigurt duhet login. Faza tjetër është aktivizimi i hyrjes për klientët."
+        "Për të publikuar kërkesë duhet të hysh ose të krijosh llogari si klient."
       );
       return;
     }
@@ -526,6 +628,126 @@ function App() {
     );
   }
 
+  if (showAuth) {
+    return (
+      <div className="page register-view auth-view">
+        <div className="register-shell">
+          <button className="ghost-btn register-back" onClick={() => setShowAuth(false)}>
+            Kthehu
+          </button>
+
+          <div className="register-card auth-card">
+            <div className="register-top">
+              <div className="register-hero-copy">
+                <span className="eyebrow">Fix24 Account</span>
+                <h1>{authMode === "signin" ? "Hyr në Fix24." : "Krijo llogari."}</h1>
+                <p>
+                  Llogaria lidh klientët, profesionistët dhe kërkesat me një pronar real.
+                  Kjo është baza për ofertat, statuset dhe vlerësimet e sigurta.
+                </p>
+              </div>
+
+              <aside className="request-status-card auth-side-card">
+                <span className="preview-badge">Role</span>
+                <strong>{userProfile?.role || "client / professional"}</strong>
+                <p>Admini caktohet vetëm nga databaza, jo nga forma publike.</p>
+                <div className="preview-pills">
+                  <span><UiIcon name="verified" />RLS</span>
+                  <span><UiIcon name="building" />Supabase Auth</span>
+                </div>
+              </aside>
+            </div>
+
+            <div className="auth-tabs">
+              <button
+                className={authMode === "signin" ? "active" : ""}
+                type="button"
+                onClick={() => setAuthMode("signin")}
+              >
+                Hyr
+              </button>
+              <button
+                className={authMode === "signup" ? "active" : ""}
+                type="button"
+                onClick={() => setAuthMode("signup")}
+              >
+                Krijo llogari
+              </button>
+            </div>
+
+            {currentUser && (
+              <div className="request-auth-note">
+                Je i loguar si {currentUser.email}. Roli: {userProfile?.role || "duke u lexuar"}.
+              </div>
+            )}
+
+            <div className="form-grid auth-form-grid">
+              {authMode === "signup" && (
+                <>
+                  <input
+                    placeholder="Emri dhe mbiemri"
+                    value={authForm.full_name}
+                    onChange={(e) =>
+                      setAuthForm({ ...authForm, full_name: e.target.value })
+                    }
+                  />
+
+                  <input
+                    placeholder="Telefoni"
+                    value={authForm.phone}
+                    onChange={(e) =>
+                      setAuthForm({ ...authForm, phone: e.target.value })
+                    }
+                  />
+
+                  <select
+                    value={authForm.role}
+                    onChange={(e) =>
+                      setAuthForm({ ...authForm, role: e.target.value })
+                    }
+                  >
+                    <option value="client">Klient</option>
+                    <option value="professional">Profesionist</option>
+                  </select>
+                </>
+              )}
+
+              <input
+                type="email"
+                placeholder="Email"
+                value={authForm.email}
+                onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={authForm.password}
+                onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
+              />
+            </div>
+
+            <button className="main-btn full" type="button" onClick={handleAuthSubmit} disabled={authLoading}>
+              {authLoading
+                ? "Duke punuar..."
+                : authMode === "signin"
+                  ? "Hyr"
+                  : "Krijo llogari"}
+            </button>
+
+            {currentUser && (
+              <button className="ghost-btn full auth-signout" type="button" onClick={signOut}>
+                Dil nga llogaria
+              </button>
+            )}
+
+            {authMessage && <div className="success request-message">{authMessage}</div>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (showRequestForm) {
     return (
       <div className="page register-view request-view">
@@ -558,8 +780,10 @@ function App() {
 
             {!currentUser && (
               <div className="request-auth-note">
-                Për publikim të sigurt duhet një klient i loguar. Struktura është gati;
-                pas kësaj faze aktivizojmë hyrjen/rolet.
+                Për publikim të sigurt duhet një klient i loguar.
+                <button type="button" onClick={() => setShowAuth(true)}>
+                  Hyr ose krijo llogari
+                </button>
               </div>
             )}
 
@@ -967,9 +1191,15 @@ function App() {
           </div>
 
           <div className="nav-actions">
-            <button className="nav-login" type="button">
-              Hyr
-            </button>
+            {currentUser ? (
+              <button className="nav-login" type="button" onClick={signOut}>
+                Dil
+              </button>
+            ) : (
+              <button className="nav-login" type="button" onClick={() => setShowAuth(true)}>
+                Hyr
+              </button>
+            )}
             <button className="nav-login" type="button" onClick={() => setShowRequestForm(true)}>
               Kërkesë
             </button>

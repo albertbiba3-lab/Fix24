@@ -125,6 +125,11 @@ select {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
 .main-btn,
 .nav-action {
   background: var(--red);
@@ -1569,6 +1574,62 @@ select {
   color: rgba(255, 255, 255, 0.86);
   font-weight: 850;
   line-height: 1.55;
+}
+
+.request-auth-note button {
+  display: inline-flex;
+  min-height: 36px;
+  margin-left: 10px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.auth-tabs {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 26px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.auth-tabs button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.auth-tabs button.active {
+  border-color: rgba(239, 35, 60, 0.34);
+  background: rgba(239, 35, 60, 0.16);
+  color: var(--text);
+}
+
+.auth-form-grid {
+  margin-top: 20px;
+}
+
+.auth-form-grid select {
+  grid-column: auto;
+}
+
+.auth-side-card {
+  min-height: 270px;
+}
+
+.auth-signout {
+  justify-content: center;
 }
 
 .request-file-input {
